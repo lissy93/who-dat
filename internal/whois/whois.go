@@ -5,6 +5,7 @@ package whois
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -56,6 +57,9 @@ func (c *Client) query(ctx context.Context, n domain.Name) (*model.Result, error
 			// timeout
 			if ctx.Err() != nil {
 				return nil, fmt.Errorf("%w: %v", srcerr.ErrTimeout, res.err)
+			}
+			if errors.Is(res.err, gowhois.ErrWhoisServerNotFound) {
+				return nil, fmt.Errorf("%w: %v", srcerr.ErrNoSource, res.err)
 			}
 			// referral failed (maybe URL instead of host), fallback to usable record if present
 			if res.raw == "" {
