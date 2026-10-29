@@ -61,6 +61,10 @@
   --amber: #ffc94d;
   --coral: #ff6b4a;
   --cream: #fff9ec;
+  /* Snap panel. Hot pink from the page palette — not the violet used on ip.fs.kg. */
+  --snap: #ff7eae;
+  --snap-muted: rgba(20, 18, 16, 0.72);
+  --snap-line: rgba(20, 18, 16, 0.32);
   --bd: 3px;
   --bd-sm: 2px;
   --r: 22px;
@@ -191,18 +195,35 @@ svg { display: block; flex: none; }
 }
 
 .lang {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  padding: 6px 12px;
+  gap: 6px;
+  padding: 4px 11px 4px 5px;
   background: var(--card);
   border: var(--bd-sm) solid var(--ink);
   border-radius: 999px;
   box-shadow: var(--sh-xs);
   font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   cursor: pointer;
+  line-height: 1;
 }
+.lang-flag {
+  display: block;
+  width: 24px;
+  height: 16px;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  overflow: hidden;
+  flex: none;
+  box-shadow: 1px 1px 0 var(--ink);
+  background: var(--card);
+}
+.lang-flag svg { display: block; width: 100%; height: 100%; }
+.lang-flag .flag-cn { display: none; }
+html[lang="en"] .lang-flag .flag-us { display: none; }
+html[lang="en"] .lang-flag .flag-cn { display: block; }
 
 .dot {
   width: 9px;
@@ -251,7 +272,7 @@ svg { display: block; flex: none; }
 }
 
 .card-hero { grid-column: span 8; }
-.card-snap { grid-column: span 4; background: var(--violet); color: var(--cream); }
+.card-snap { grid-column: span 4; background: var(--snap); color: var(--ink); }
 .card-record { grid-column: span 7; }
 .card-ns { grid-column: span 5; }
 .card-contacts { grid-column: span 4; }
@@ -288,14 +309,32 @@ svg { display: block; flex: none; }
 .lede { color: var(--ink-70); max-width: 68ch; }
 .lede-sm { font-size: 13.5px; }
 .lede code,
-.fine code {
+.fine code,
+code.path {
   font-family: var(--mono);
-  font-size: 0.92em;
-  padding: 0 0.35em;
+  font-size: 0.88em;
+  padding: 0.05em 0.38em;
   background: var(--card);
   border: var(--bd-sm) solid var(--ink);
   border-radius: 6px;
   color: var(--ink);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+/* Keep the sample URL one chip. Break only at <wbr>, never mid-token. */
+.lede code.url,
+.noscript code.url {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: baseline;
+  line-height: 1.45;
+  margin: 0.1em 0;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+code.path {
+  white-space: nowrap;
+  background: var(--paper-2);
 }
 
 mark.hl {
@@ -336,7 +375,7 @@ mark.hl-lime { background-color: var(--lime); }
 .tagline em { font-style: normal; color: var(--ink-70); font-weight: 500; }
 
 .fine { font-size: 11.5px; line-height: 1.55; color: var(--ink-45); }
-.card-snap .fine { color: rgba(255, 249, 236, 0.72); }
+.card-snap .fine { color: var(--snap-muted); }
 
 .card-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .card-tools { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
@@ -451,7 +490,7 @@ mark.hl-lime { background-color: var(--lime); }
 .status.is-err { color: var(--coral); font-weight: 700; }
 
 .chips { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.chips-label { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--ink-45); }
+.chips-label { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--ink-45); white-space: nowrap; }
 .chip {
   display: inline-flex;
   align-items: baseline;
@@ -467,10 +506,25 @@ mark.hl-lime { background-color: var(--lime); }
   box-shadow: 2px 2px 0 var(--ink);
 }
 .chip i { font-style: normal; font-family: var(--sans); font-size: 10.5px; color: var(--ink-45); }
+/* Demo row stays one line inside the hero on desktop. Recent chips may still wrap. */
+#chips {
+  flex-wrap: nowrap;
+  gap: 6px;
+  min-width: 0;
+}
+#chips .chips-label { flex: none; }
+#chips .chip {
+  flex: 0 0 auto;
+  gap: 0;
+  padding: 5px 9px;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 2px 2px 0 var(--ink);
+}
 .hist { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 /* ---------- snapshot ---------- */
-.card-snap .h2 svg { color: var(--cream); }
+.card-snap .h2 svg { color: var(--ink); }
 .card-snap .badge { color: var(--ink); background: var(--lime); box-shadow: 2px 2px 0 var(--ink); }
 .card-snap .badge.badge-grey { background: var(--paper-2); }
 
@@ -544,10 +598,25 @@ html[lang="en"] .kv-2 { grid-template-columns: 1fr; }
 }
 .kv-row a { color: var(--violet-deep); font-weight: 700; }
 
-.card-snap .kv-row { border-bottom-color: rgba(255, 249, 236, 0.28); }
-.card-snap .kv-row dt { color: rgba(255, 249, 236, 0.72); }
-.card-snap .kv-row dd { color: var(--cream); }
-.card-snap .kv-row a { color: var(--cream); }
+.card-snap .kv-row {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 12px;
+  border-bottom-color: var(--snap-line);
+}
+.card-snap .kv-row dt { color: var(--snap-muted); }
+.card-snap .kv-row dd {
+  justify-self: end;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  color: var(--ink);
+}
+.card-snap .kv-row a { color: var(--ink); }
 
 .empty {
   flex: 1;
@@ -771,7 +840,7 @@ html[lang="en"] .kv-2 { grid-template-columns: 1fr; }
   font-size: 12.5px;
   line-height: 1.7;
   color: #ebf9c9;
-  white-space: pre-wrap;
+  white-space: pre;
 }
 .t-c { color: rgba(255, 249, 236, 0.42); }
 .t-p { color: var(--pink); font-weight: 700; }
@@ -935,7 +1004,13 @@ html[lang="en"] .kv-2 { grid-template-columns: 1fr; }
   .kv-2 { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 1120px) {
+  #chips { gap: 5px; }
+  #chips .chip { padding: 4px 7px; font-size: 11px; }
+}
+
 @media (max-width: 720px) {
+  #chips { flex-wrap: wrap; }
   .bar { flex-wrap: wrap; row-gap: 8px; }
   .nav { order: 5; width: 100%; margin-left: 0; }
   .search { padding: 8px; }

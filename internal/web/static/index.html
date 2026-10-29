@@ -41,13 +41,49 @@
           <span class="dot dot-grey" id="barDot" aria-hidden="true"></span>
           <span id="barQuery">等待查询</span>
         </button>
-        <button type="button" class="lang" id="langToggle" aria-label="English">EN</button>
+        <button type="button" class="lang" id="langToggle" aria-label="切换到英文">
+          <span class="lang-flag" aria-hidden="true">
+            <svg class="flag flag-us" viewBox="0 0 22 14" width="22" height="14">
+              <rect width="22" height="14" fill="#fff"></rect>
+              <rect y="0" width="22" height="2" fill="#b22234"></rect>
+              <rect y="4" width="22" height="2" fill="#b22234"></rect>
+              <rect y="8" width="22" height="2" fill="#b22234"></rect>
+              <rect y="12" width="22" height="2" fill="#b22234"></rect>
+              <rect width="9" height="8" fill="#3c3b6e"></rect>
+              <g fill="#fff">
+                <circle cx="1.5" cy="1.5" r="0.45"></circle>
+                <circle cx="3.4" cy="1.5" r="0.45"></circle>
+                <circle cx="5.3" cy="1.5" r="0.45"></circle>
+                <circle cx="7.2" cy="1.5" r="0.45"></circle>
+                <circle cx="2.45" cy="3.1" r="0.45"></circle>
+                <circle cx="4.35" cy="3.1" r="0.45"></circle>
+                <circle cx="6.25" cy="3.1" r="0.45"></circle>
+                <circle cx="1.5" cy="4.7" r="0.45"></circle>
+                <circle cx="3.4" cy="4.7" r="0.45"></circle>
+                <circle cx="5.3" cy="4.7" r="0.45"></circle>
+                <circle cx="7.2" cy="4.7" r="0.45"></circle>
+                <circle cx="2.45" cy="6.3" r="0.45"></circle>
+                <circle cx="4.35" cy="6.3" r="0.45"></circle>
+                <circle cx="6.25" cy="6.3" r="0.45"></circle>
+              </g>
+            </svg>
+            <svg class="flag flag-cn" viewBox="0 0 30 20" width="22" height="14">
+              <rect width="30" height="20" fill="#de2910"></rect>
+              <polygon fill="#ffde00" points="6,2.2 7.35,6.15 11.5,6.15 8.15,8.55 9.4,12.5 6,10.05 2.6,12.5 3.85,8.55 0.5,6.15 4.65,6.15"></polygon>
+              <polygon fill="#ffde00" points="12.2,1.5 12.7,2.85 14.15,2.85 13,3.7 13.45,5.05 12.2,4.2 10.95,5.05 11.4,3.7 10.25,2.85 11.7,2.85"></polygon>
+              <polygon fill="#ffde00" points="14.4,4.3 14.9,5.65 16.35,5.65 15.2,6.5 15.65,7.85 14.4,7 13.15,7.85 13.6,6.5 12.45,5.65 13.9,5.65"></polygon>
+              <polygon fill="#ffde00" points="14.4,8.1 14.9,9.45 16.35,9.45 15.2,10.3 15.65,11.65 14.4,10.8 13.15,11.65 13.6,10.3 12.45,9.45 13.9,9.45"></polygon>
+              <polygon fill="#ffde00" points="12.2,10.7 12.7,12.05 14.15,12.05 13,12.9 13.45,14.25 12.2,13.4 10.95,14.25 11.4,12.9 10.25,12.05 11.7,12.05"></polygon>
+            </svg>
+          </span>
+          <span data-i18n="lang.btn">EN</span>
+        </button>
       </div>
     </header>
 
     <main class="wrap">
       <noscript>
-        <p class="noscript">查询界面需要 JavaScript。接口本身不需要浏览器：<code>https://wi.fs.kg/v1/whois/example.com</code></p>
+        <p class="noscript">查询界面需要 JavaScript。接口本身不需要浏览器：<code class="url">https://wi.fs.kg/<wbr>v1/whois/example.com</code></p>
       </noscript>
 
       <section class="card card-hero" id="lookup">
@@ -67,7 +103,7 @@
         </p>
         <p class="lede">
           <span data-i18n="lede">输入域名即可。优先查询 RDAP，这个后缀没有 RDAP 时再退回 WHOIS，两边都收成同一套字段。没有广告，没有追踪脚本，也不需要注册。命令行直接请求</span>
-          <code>https://wi.fs.kg/v1/whois/example.com</code>
+          <code class="url">https://wi.fs.kg/<wbr>v1/whois/example.com</code>
         </p>
 
         <form class="search" id="lookupForm">
@@ -87,11 +123,11 @@
         <p class="status" id="status" role="status" data-i18n="status.idle">输入域名，或点下面任一示例。</p>
         <div class="chips" id="chips">
           <span class="chips-label" data-i18n="chips.label">试试</span>
-          <button type="button" class="chip" data-domain="example.com">example.com <i data-i18n="chip.demo">示例</i></button>
-          <button type="button" class="chip" data-domain="google.com">google.com <i data-i18n="chip.google">搜索</i></button>
-          <button type="button" class="chip" data-domain="github.com">github.com <i data-i18n="chip.github">代码</i></button>
-          <button type="button" class="chip" data-domain="wikipedia.org">wikipedia.org <i data-i18n="chip.wiki">百科</i></button>
-          <button type="button" class="chip" data-domain="cloudflare.com">cloudflare.com <i data-i18n="chip.cf">DNS</i></button>
+          <button type="button" class="chip" data-domain="example.com">example.com</button>
+          <button type="button" class="chip" data-domain="google.com">google.com</button>
+          <button type="button" class="chip" data-domain="github.com">github.com</button>
+          <button type="button" class="chip" data-domain="wikipedia.org">wikipedia.org</button>
+          <button type="button" class="chip" data-domain="cloudflare.com">cloudflare.com</button>
         </div>
         <div class="hist" id="histRow" hidden>
           <span class="chips-label" data-i18n="recent">最近</span>
@@ -220,9 +256,9 @@
           <pre class="term-body" id="curlOut"></pre>
         </div>
         <ul class="notes">
-          <li data-i18n="api.n1">单条查询走 https://wi.fs.kg/v1/whois/{domain}，裸路径 https://wi.fs.kg/{domain} 也行。加上 ?raw=true 返回上游 RDAP JSON 或 WHOIS 原文。</li>
-          <li data-i18n="api.n2">批量用 https://wi.fs.kg/multi?domains=a.com,b.com。默认最多 10 个，可用环境变量 MAX_DOMAINS 调整。</li>
-          <li data-i18n="api.n3">完整字段说明在 https://wi.fs.kg/docs。OpenAPI 规范在 https://wi.fs.kg/openapi.yaml。</li>
+          <li data-i18n-html="api.n1">单条查询走 <code class="path">/v1/whois/{domain}</code>，裸路径 <code class="path">/{domain}</code> 也行。加上 <code class="path">?raw=true</code> 返回上游 RDAP JSON 或 WHOIS 原文。</li>
+          <li data-i18n-html="api.n2">批量用 <code class="path">/multi?domains=a.com,b.com</code>。默认最多 10 个，可用环境变量 <code class="path">MAX_DOMAINS</code> 调整。</li>
+          <li data-i18n-html="api.n3">完整字段说明在 <code class="path">/docs</code>。OpenAPI 规范在 <code class="path">/openapi.yaml</code>。</li>
         </ul>
       </section>
 
@@ -266,7 +302,7 @@
         </details>
         <details class="qa">
           <summary><span data-i18n="faq.q3">可以在命令行里查吗？</span></summary>
-          <p data-i18n="faq.a3">可以，不需要密钥。请求 https://wi.fs.kg/v1/whois/example.com 得到归一化 JSON；加上 ?raw=true 则是上游原文。多个域名用 https://wi.fs.kg/multi?domains=a.com,b.com。浏览器访问根路径仍然是这个页面。</p>
+          <p data-i18n-html="faq.a3">可以，不需要密钥。请求 <code class="path">/v1/whois/example.com</code> 得到归一化 JSON；加上 <code class="path">?raw=true</code> 则是上游原文。多个域名用 <code class="path">/multi?domains=a.com,b.com</code>。完整地址在上面的终端示例里。浏览器访问根路径仍然是这个页面。</p>
         </details>
         <details class="qa">
           <summary><span data-i18n="faq.q4">会记录我查过什么吗？</span></summary>

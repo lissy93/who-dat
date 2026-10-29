@@ -33,11 +33,6 @@
       "btn.search": "查询",
       "btn.searching": "查询中…",
       "chips.label": "试试",
-      "chip.demo": "示例",
-      "chip.google": "搜索",
-      "chip.github": "代码",
-      "chip.wiki": "百科",
-      "chip.cf": "DNS",
       recent: "最近",
       "recent.clear": "清除",
       "status.idle": "输入域名，或点下面任一示例。",
@@ -120,9 +115,9 @@
       "api.title": "终端接口",
       "api.badge": "无需密钥",
       "api.lede": "页面和接口在同一部署上。浏览器打开根路径看到这个界面；curl 打下面的路径拿到 JSON。不需要 API key，响应带 CORS。",
-      "api.n1": "单条查询走 https://wi.fs.kg/v1/whois/{domain}，裸路径 https://wi.fs.kg/{domain} 也行。加上 ?raw=true 返回上游 RDAP JSON 或 WHOIS 原文。",
-      "api.n2": "批量用 https://wi.fs.kg/multi?domains=a.com,b.com。默认最多 10 个，可用环境变量 MAX_DOMAINS 调整。",
-      "api.n3": "完整字段说明在 https://wi.fs.kg/docs。OpenAPI 规范在 https://wi.fs.kg/openapi.yaml。",
+      "api.n1": "单条查询走 <code class=\"path\">/v1/whois/{domain}</code>，裸路径 <code class=\"path\">/{domain}</code> 也行。加上 <code class=\"path\">?raw=true</code> 返回上游 RDAP JSON 或 WHOIS 原文。",
+      "api.n2": "批量用 <code class=\"path\">/multi?domains=a.com,b.com</code>。默认最多 10 个，可用环境变量 <code class=\"path\">MAX_DOMAINS</code> 调整。",
+      "api.n3": "完整字段说明在 <code class=\"path\">/docs</code>。OpenAPI 规范在 <code class=\"path\">/openapi.yaml</code>。",
       "about.title": "数据与限制",
       "about.n1": "先问 RDAP。只有这个后缀没有 RDAP 服务器时，才退回端口 43 的 WHOIS。",
       "about.n2": "两种来源收成同一套字段：是否注册、注册商、日期、状态码、名称服务器、DNSSEC、联系人。",
@@ -134,7 +129,7 @@
       "faq.q2": "为什么联系人经常是空的？",
       "faq.a2": "多数注册局按隐私规则隐去个人联系信息，通用顶级域尤其常见。隐去时这一格会写「已隐去」。那是注册局的选择，不是查询失败。",
       "faq.q3": "可以在命令行里查吗？",
-      "faq.a3": "可以，不需要密钥。请求 https://wi.fs.kg/v1/whois/example.com 得到归一化 JSON；加上 ?raw=true 则是上游原文。多个域名用 https://wi.fs.kg/multi?domains=a.com,b.com。浏览器访问根路径仍然是这个页面。",
+      "faq.a3": "可以，不需要密钥。请求 <code class=\"path\">/v1/whois/example.com</code> 得到归一化 JSON；加上 <code class=\"path\">?raw=true</code> 则是上游原文。多个域名用 <code class=\"path\">/multi?domains=a.com,b.com</code>。完整地址在上面的终端示例里。浏览器访问根路径仍然是这个页面。",
       "faq.q4": "会记录我查过什么吗？",
       "faq.a4": "页面没有第三方统计。「最近」列表只存在你这台浏览器的本地存储里，可以在上面一键清除。服务端可以开内存缓存，用来少打注册局，缓存的是查询结果，不是一份用户档案。",
       "foot.blurb": "域名注册信息",
@@ -196,11 +191,6 @@
       "btn.search": "Look up",
       "btn.searching": "Looking…",
       "chips.label": "Try",
-      "chip.demo": "sample",
-      "chip.google": "search",
-      "chip.github": "code",
-      "chip.wiki": "encyclopedia",
-      "chip.cf": "DNS",
       recent: "Recent",
       "recent.clear": "Clear",
       "status.idle": "Enter a domain, or pick an example.",
@@ -283,9 +273,9 @@
       "api.title": "Terminal API",
       "api.badge": "No key",
       "api.lede": "The page and the API are the same deployment. A browser at the root gets this UI; curl against the paths below gets JSON. No API key. CORS is open.",
-      "api.n1": "One domain: https://wi.fs.kg/v1/whois/{domain}. The bare https://wi.fs.kg/{domain} path works too. ?raw=true returns the upstream RDAP JSON or WHOIS text.",
-      "api.n2": "Batch: https://wi.fs.kg/multi?domains=a.com,b.com. The default cap is 10, changeable with MAX_DOMAINS.",
-      "api.n3": "Field reference lives at https://wi.fs.kg/docs. The OpenAPI document is https://wi.fs.kg/openapi.yaml.",
+      "api.n1": "One domain: <code class=\"path\">/v1/whois/{domain}</code>. The bare <code class=\"path\">/{domain}</code> path works too. <code class=\"path\">?raw=true</code> returns the upstream RDAP JSON or WHOIS text.",
+      "api.n2": "Batch: <code class=\"path\">/multi?domains=a.com,b.com</code>. The default cap is 10, changeable with <code class=\"path\">MAX_DOMAINS</code>.",
+      "api.n3": "Field reference lives at <code class=\"path\">/docs</code>. The OpenAPI document is <code class=\"path\">/openapi.yaml</code>.",
       "about.title": "Data & limits",
       "about.n1": "RDAP first. Port-43 WHOIS is only used when the suffix has no RDAP server.",
       "about.n2": "Both sources are normalized: registration, registrar, dates, status codes, nameservers, DNSSEC, contacts.",
@@ -297,7 +287,7 @@
       "faq.q2": "Why are contacts often empty?",
       "faq.a2": "Most registries redact personal contact data, especially on generic TLDs. A redacted role is labeled. That is the registry's choice, not a failed lookup.",
       "faq.q3": "Can I use this from the shell?",
-      "faq.a3": "Yes, with no key. https://wi.fs.kg/v1/whois/example.com returns normalized JSON; ?raw=true returns the upstream payload. Several domains: https://wi.fs.kg/multi?domains=a.com,b.com. A browser at the root still gets this page.",
+      "faq.a3": "Yes, with no key. <code class=\"path\">/v1/whois/example.com</code> returns normalized JSON; <code class=\"path\">?raw=true</code> returns the upstream payload. Several domains: <code class=\"path\">/multi?domains=a.com,b.com</code>. The terminal block above shows the absolute URL for this host. A browser at the root still gets this page.",
       "faq.q4": "Do you store what I look up?",
       "faq.a4": "There is no third-party analytics. The recent list lives only in this browser and can be cleared above. The server may keep an in-memory cache of lookup results so it hits registries less often. That cache is not a user profile.",
       "foot.blurb": "Domain registration",
@@ -455,8 +445,10 @@
   function kvRow(label, value) {
     var dd = el("dd");
     if (value == null || value === "") dd.textContent = "—";
-    else if (typeof value === "string") dd.textContent = value;
-    else dd.append(value);
+    else if (typeof value === "string") {
+      dd.textContent = value;
+      if (value.length > 22) dd.title = value;
+    } else dd.append(value);
     return el("div", { class: "kv-row" }, [el("dt", { text: label }), dd]);
   }
 
@@ -546,11 +538,13 @@
     document.querySelectorAll("[data-i18n]").forEach(function (node) {
       node.textContent = t(node.getAttribute("data-i18n"));
     });
+    document.querySelectorAll("[data-i18n-html]").forEach(function (node) {
+      node.innerHTML = t(node.getAttribute("data-i18n-html"));
+    });
     document.querySelectorAll("[data-i18n-placeholder]").forEach(function (node) {
       node.setAttribute("placeholder", t(node.getAttribute("data-i18n-placeholder")));
     });
     var langBtn = $("langToggle");
-    langBtn.textContent = t("lang.btn");
     langBtn.setAttribute("aria-label", t("lang.aria"));
     var jsonBtn = $("jsonToggle");
     jsonBtn.textContent = state.showJson ? t("json.hide") : t("record.json");
