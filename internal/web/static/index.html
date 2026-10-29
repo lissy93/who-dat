@@ -9,9 +9,11 @@
     <meta name="description" content="输入域名，一次看清注册状态、注册商、到期日、名称服务器和联系人。RDAP 优先，WHOIS 兜底。免注册、无广告、无追踪脚本。" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
-    <meta property="og:title" content="域名 WHOIS 查询" />
+    <meta property="og:url" content="https://wi.fs.kg/" />
+    <meta property="og:title" content="wi.fs.kg — 域名 WHOIS 查询" />
     <meta property="og:description" content="归属、状态、到期日一次摊开。免注册、无广告、无追踪脚本。" />
-    <title>域名 WHOIS 查询</title>
+    <link rel="canonical" href="https://wi.fs.kg/" />
+    <title>wi.fs.kg — 域名 WHOIS 查询</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
@@ -24,7 +26,7 @@
             <path d="M15.2 15.2 L20 20"></path>
           </svg>
         </span>
-        <span class="brand-txt">whois</span>
+        <span class="brand-txt">wi.fs.kg</span>
       </a>
       <nav class="nav" aria-label="Primary">
         <a href="#lookup" data-i18n="nav.lookup">查询</a>
@@ -45,7 +47,7 @@
 
     <main class="wrap">
       <noscript>
-        <p class="noscript">查询界面需要 JavaScript。接口本身不需要浏览器：<code>/v1/whois/example.com</code></p>
+        <p class="noscript">查询界面需要 JavaScript。接口本身不需要浏览器：<code>https://wi.fs.kg/v1/whois/example.com</code></p>
       </noscript>
 
       <section class="card card-hero" id="lookup">
@@ -65,7 +67,7 @@
         </p>
         <p class="lede">
           <span data-i18n="lede">输入域名即可。优先查询 RDAP，这个后缀没有 RDAP 时再退回 WHOIS，两边都收成同一套字段。没有广告，没有追踪脚本，也不需要注册。命令行直接请求</span>
-          <code>/v1/whois/example.com</code>
+          <code>https://wi.fs.kg/v1/whois/example.com</code>
         </p>
 
         <form class="search" id="lookupForm">
@@ -213,14 +215,14 @@
         <div class="term">
           <div class="term-bar">
             <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
-            <span class="term-title">bash — /v1/whois</span>
+            <span class="term-title">bash — wi.fs.kg</span>
           </div>
           <pre class="term-body" id="curlOut"></pre>
         </div>
         <ul class="notes">
-          <li data-i18n="api.n1">单条查询走 /v1/whois/{domain}，裸路径 /{domain} 也行。加上 ?raw=true 返回上游 RDAP JSON 或 WHOIS 原文。</li>
-          <li data-i18n="api.n2">批量用 /multi?domains=a.com,b.com。默认最多 10 个，可用环境变量 MAX_DOMAINS 调整。</li>
-          <li data-i18n="api.n3">完整字段说明在 /docs。OpenAPI 规范在 /openapi.yaml。</li>
+          <li data-i18n="api.n1">单条查询走 https://wi.fs.kg/v1/whois/{domain}，裸路径 https://wi.fs.kg/{domain} 也行。加上 ?raw=true 返回上游 RDAP JSON 或 WHOIS 原文。</li>
+          <li data-i18n="api.n2">批量用 https://wi.fs.kg/multi?domains=a.com,b.com。默认最多 10 个，可用环境变量 MAX_DOMAINS 调整。</li>
+          <li data-i18n="api.n3">完整字段说明在 https://wi.fs.kg/docs。OpenAPI 规范在 https://wi.fs.kg/openapi.yaml。</li>
         </ul>
       </section>
 
@@ -264,7 +266,7 @@
         </details>
         <details class="qa">
           <summary><span data-i18n="faq.q3">可以在命令行里查吗？</span></summary>
-          <p data-i18n="faq.a3">可以，不需要密钥。请求 /v1/whois/example.com 得到归一化 JSON；加上 ?raw=true 则是上游原文。多个域名用 /multi?domains=a.com,b.com。浏览器访问根路径仍然是这个页面。</p>
+          <p data-i18n="faq.a3">可以，不需要密钥。请求 https://wi.fs.kg/v1/whois/example.com 得到归一化 JSON；加上 ?raw=true 则是上游原文。多个域名用 https://wi.fs.kg/multi?domains=a.com,b.com。浏览器访问根路径仍然是这个页面。</p>
         </details>
         <details class="qa">
           <summary><span data-i18n="faq.q4">会记录我查过什么吗？</span></summary>
@@ -282,7 +284,7 @@
               <path d="M15.2 15.2 L20 20"></path>
             </svg>
           </span>
-          <strong class="brand-txt">whois</strong>
+          <strong class="brand-txt">wi.fs.kg</strong>
           <span class="foot-sep" aria-hidden="true">·</span>
           <span data-i18n="foot.blurb">域名注册信息</span>
           <span class="foot-sep" aria-hidden="true">·</span>

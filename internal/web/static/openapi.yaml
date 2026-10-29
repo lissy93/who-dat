@@ -1,8 +1,9 @@
 openapi: 3.1.0
 info:
-  title: Domain WHOIS
+  title: wi.fs.kg
   description: >
-    Normalized WHOIS and RDAP lookup. Returns one consistent shape for every TLD.
+    Normalized WHOIS and RDAP lookup served at https://wi.fs.kg.
+    Returns one consistent shape for every TLD.
     RDAP is used where available, with a port-43 WHOIS fallback. Append `?raw=true`
     to any lookup to get the original upstream payload.
   version: 2.0.0
@@ -10,6 +11,8 @@ info:
     name: MIT
     url: https://github.com/niesgeek/who-dat/blob/HEAD/LICENSE
 servers:
+  - url: https://wi.fs.kg
+    description: Production
   - url: /
     description: This deployment
 paths:
