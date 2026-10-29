@@ -133,7 +133,7 @@ This is the quickest and easiest way to get up-and-running. Simply fork the repo
 
 Alternatively, just hit the button below for 1-click deploy 👇
 
-[![1-Click Deploy to Vercel](https://img.shields.io/badge/Deploy-Vercel-ffffff?style=for-the-badge&logo=vercel&labelColor=1b2744&link=https%3A%2F%2Fwho-dat.as93.net%2Fdocs)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flissy93%2Fwho-dat&demo-title=Who-Dat%20Demo&demo-url=https%3A%2F%2Fwho-dat.as93.net&demo-image=https%3A%2F%2Fi.ibb.co%2FJ5r1zCP%2Fwho-dat-square.png)
+[![1-Click Deploy to Vercel](https://img.shields.io/badge/Deploy-Vercel-ffffff?style=for-the-badge&logo=vercel&labelColor=1b2744&link=https%3A%2F%2Fwho-dat.as93.net%2Fdocs)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fniesgeek%2Fwho-dat)
 
 #### Option 2: Docker
 

@@ -1,261 +1,303 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#000000" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F5EFE1" />
+    <meta name="color-scheme" content="light" />
     <meta name="robots" content="index, follow" />
-    <meta name="description" content="Who Dat - Free and Open Source WHOIS & RDAP lookup API. Find the owner and registration details of any domain, across as many TLDs as possible." />
-    <meta name="keywords" content="WHOIS, RDAP, API, Domain Lookup, Free WHOIS API, Open Source, Domain Owner, DNS Lookup" />
-    <meta name="author" content="Alicia Sykes" />
-    <link rel="canonical" href="https://who-dat.as93.net/" />
-
+    <meta name="description" content="输入域名，一次看清注册状态、注册商、到期日、名称服务器和联系人。RDAP 优先，WHOIS 兜底。免注册、无广告、无追踪脚本。" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://who-dat.as93.net/" />
-    <meta property="og:title" content="Who Dat - Free & Open Source WHOIS Lookup API" />
-    <meta property="og:description" content="Free and Open Source WHOIS & RDAP lookup API. Find the owner of any domain easily." />
-    <meta property="og:image" content="/who-dat.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Who Dat - Free & Open Source WHOIS Lookup API" />
-    <meta name="twitter:description" content="Free and Open Source WHOIS & RDAP lookup API. Find the owner of any domain easily." />
-    <meta name="twitter:image" content="/who-dat.png" />
-
-    <link rel="icon" type="image/png" href="/who-dat-square.png" />
-    <title>Who Dat? - Free & Open Source WHOIS & RDAP Lookup API</title>
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content="域名 WHOIS 查询" />
+    <meta property="og:description" content="归属、状态、到期日一次摊开。免注册、无广告、无追踪脚本。" />
+    <title>域名 WHOIS 查询</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
-    <script defer data-domain="who-dat.as93.net" src="https://no-track.as93.net/js/script.js"></script>
-
-    <style>html { background: #000; color: #fff; }</style>
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Who Dat?",
-      "url": "https://who-dat.as93.net/",
-      "applicationCategory": "DeveloperApplication",
-      "operatingSystem": "Any",
-      "description": "Free and Open Source WHOIS & RDAP lookup API.",
-      "author": { "@type": "Person", "name": "Alicia Sykes", "url": "https://aliciasykes.com" },
-      "license": "https://github.com/lissy93/who-dat/blob/HEAD/LICENSE",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
-    }
-    </script>
-
-    <script>
-      function whoisLookup() {
-        return {
-          domain: '',
-          result: '',
-          error: '',
-          loading: false,
-          formattedResult: [],
-          showFormatted: true,
-          toggleFormat() { this.showFormatted = !this.showFormatted; },
-          lookup() {
-            const q = this.domain.trim();
-            this.error = '';
-            if (!q) return;
-            if (!q.includes('.')) { this.error = 'Please enter a valid domain, e.g. example.com'; return; }
-
-            this.loading = true;
-            this.result = '';
-            this.formattedResult = [];
-            fetch(`/v1/whois/${encodeURIComponent(q)}`)
-              .then(async (response) => {
-                const data = await response.json();
-                if (!response.ok) {
-                  const e = data && data.error;
-                  throw new Error(e ? [e.message, e.detail].filter(Boolean).join(' - ') : 'Lookup failed');
-                }
-                return data;
-              })
-              .then((data) => {
-                this.result = JSON.stringify(data, null, 2);
-                this.formattedResult = this.formatResult(data);
-              })
-              .catch((err) => { this.error = err.message || 'Failed to fetch WHOIS data'; })
-              .finally(() => { this.loading = false; });
-          },
-          formatResult(d) {
-            const out = [];
-            const fmtDate = (v) => {
-              const t = Date.parse(v);
-              return Number.isNaN(t) ? v : new Date(t).toUTCString();
-            };
-            const section = (lbl, rows) => {
-              const items = rows.filter((r) => r.val !== null && r.val !== undefined && r.val !== '');
-              if (items.length) out.push({ lbl, val: items });
-            };
-            const reg = d.registrar || {};
-            const dates = d.dates || {};
-            const dnssec = d.dnssec || {};
-            const meta = d.meta || {};
-            const title = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-
-            section('Domain', [
-              { lbl: 'Domain', val: d.domain },
-              { lbl: 'Unicode', val: d.domainUnicode },
-              { lbl: 'TLD', val: d.tld },
-              { lbl: 'Registered', val: d.isRegistered ? 'Yes' : 'No' },
-              { lbl: 'ID', val: d.id },
-            ]);
-            section('Registrar', [
-              { lbl: 'Name', val: reg.name },
-              { lbl: 'IANA ID', val: reg.ianaId },
-              { lbl: 'URL', val: reg.url },
-              { lbl: 'WHOIS server', val: reg.whoisServer },
-              { lbl: 'Reseller', val: reg.reseller },
-              { lbl: 'Abuse email', val: reg.abuseEmail },
-              { lbl: 'Abuse phone', val: reg.abusePhone },
-            ]);
-            section('Dates', [
-              { lbl: 'Created', val: dates.created && fmtDate(dates.created) },
-              { lbl: 'Updated', val: dates.updated && fmtDate(dates.updated) },
-              { lbl: 'Expires', val: dates.expires && fmtDate(dates.expires) },
-            ]);
-            section('Status', (d.status || []).map((s, i) => ({ lbl: `Status ${i + 1}`, val: s })));
-            section('Nameservers', (d.nameservers || []).map((n, i) => {
-              const ips = [...(n.ipv4 || []), ...(n.ipv6 || [])];
-              return { lbl: `NS ${i + 1}`, val: ips.length ? `${n.name} (${ips.join(', ')})` : n.name };
-            }));
-            section('DNSSEC', [
-              { lbl: 'Signed', val: dnssec.signed ? 'Yes' : 'No' },
-              { lbl: 'DS records', val: (dnssec.dsData || []).length || null },
-            ]);
-            const redacted = [];
-            ['registrant', 'admin', 'tech', 'billing'].forEach((role) => {
-              const c = d.contacts && d.contacts[role];
-              if (!c) return;
-              const a = c.address || {};
-              const rows = [
-                { lbl: 'Name', val: c.name },
-                { lbl: 'Organization', val: c.organization },
-                { lbl: 'Email', val: c.email },
-                { lbl: 'Phone', val: c.phone },
-                { lbl: 'Street', val: a.street },
-                { lbl: 'City', val: a.city },
-                { lbl: 'State', val: a.state },
-                { lbl: 'Postal code', val: a.postalCode },
-                { lbl: 'Country', val: a.country },
-              ].filter((r) => r.val);
-              if (rows.length) section(`Contact: ${title(role)}`, rows);
-              else if (c.redacted) redacted.push(title(role));
-            });
-            if (redacted.length) section('Contacts', [{ lbl: 'Redacted', val: redacted.join(', ') }]);
-            section('Meta', [
-              { lbl: 'Source', val: meta.source },
-              { lbl: 'Server', val: meta.server },
-              { lbl: 'Cached', val: meta.cached ? 'Yes' : 'No' },
-              { lbl: 'Fetched at', val: meta.fetchedAt && fmtDate(meta.fetchedAt) },
-            ]);
-            return out;
-          },
-        };
-      }
-    </script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
   <body>
-
-    <header>
-      <div class="left">
-        <h1>Who Dat?</h1>
-        <p>Free &amp; Open Source WHOIS Lookup Service</p>
-      </div>
-      <nav aria-label="Primary">
-        <a href="/docs">Public API</a>
-        <a href="https://github.com/Lissy93/who-dat#deployment" target="_blank" rel="noopener noreferrer">Self-Hosting</a>
-        <a href="https://github.com/Lissy93/who-dat" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <header class="bar">
+      <a class="brand" href="#lookup">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFF9EC" stroke-width="2.4" stroke-linecap="round">
+            <circle cx="10.5" cy="10.5" r="6.2"></circle>
+            <path d="M15.2 15.2 L20 20"></path>
+          </svg>
+        </span>
+        <span class="brand-txt">whois</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="#lookup" data-i18n="nav.lookup">查询</a>
+        <a href="#record" data-i18n="nav.record">档案</a>
+        <a href="#ns" data-i18n="nav.ns">服务器</a>
+        <a href="#batch" data-i18n="nav.batch">批量</a>
+        <a href="#api" data-i18n="nav.api">接口</a>
+        <a href="/docs" data-i18n="nav.docs">文档</a>
       </nav>
+      <div class="bar-side">
+        <button type="button" class="bar-me" id="barMe">
+          <span class="dot dot-grey" id="barDot" aria-hidden="true"></span>
+          <span id="barQuery">等待查询</span>
+        </button>
+        <button type="button" class="lang" id="langToggle" aria-label="English">EN</button>
+      </div>
     </header>
 
-    <main>
-      <!-- WHOIS Lookup -->
-      <section class="lookup" x-data="whoisLookup()">
-        <h2>WHOIS Lookup</h2>
-        <form @submit.prevent="lookup">
-          <label class="sr-only" for="domain">Domain name</label>
-          <input id="domain" name="domain" type="text" x-model="domain"
-                 placeholder="Enter a domain name" autocomplete="off" spellcheck="false"
-                 :disabled="loading" :aria-busy="loading" />
-          <button type="submit" :disabled="loading" x-text="loading ? 'Looking up…' : 'Lookup'"></button>
-        </form>
+    <main class="wrap">
+      <noscript>
+        <p class="noscript">查询界面需要 JavaScript。接口本身不需要浏览器：<code>/v1/whois/example.com</code></p>
+      </noscript>
 
-        <div class="results" x-show="loading || error || result" x-cloak aria-live="polite">
-          <!-- Loading placeholder -->
-          <div class="skeleton" x-show="loading" aria-hidden="true">
-            <span></span><span></span><span></span>
+      <section class="card card-hero" id="lookup">
+        <p class="eyebrow"><span class="sq sq-violet" aria-hidden="true"></span><span data-i18n="eyebrow">WHOIS LOOKUP · 免注册 · 无广告</span></p>
+        <h1 class="h1">
+          <span data-i18n="h1.l1">查一个域名，</span><br />
+          <mark class="hl hl-pink" data-i18n="h1.a">归属、</mark>
+          <mark class="hl hl-sky" data-i18n="h1.b">状态、</mark>
+          <mark class="hl hl-lime" data-i18n="h1.c">到期日</mark><br />
+          <span data-i18n="h1.l3">一次摊开。</span>
+        </h1>
+        <p class="tagline">
+          <span class="tl-key">W.</span>
+          <span data-i18n="tag.main">WHOIS Lookup</span>
+          <span class="tl-sep" aria-hidden="true">·</span>
+          <em data-i18n="tag.sub">注册、注册商与到期，一次看清。</em>
+        </p>
+        <p class="lede">
+          <span data-i18n="lede">输入域名即可。优先查询 RDAP，这个后缀没有 RDAP 时再退回 WHOIS，两边都收成同一套字段。没有广告，没有追踪脚本，也不需要注册。命令行直接请求</span>
+          <code>/v1/whois/example.com</code>
+        </p>
+
+        <form class="search" id="lookupForm">
+          <span class="search-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
+              <circle cx="10.5" cy="10.5" r="6.2"></circle>
+              <path d="M15.2 15.2 L20 20"></path>
+            </svg>
+          </span>
+          <label class="sr-only" for="q" data-i18n="label.q">域名</label>
+          <input id="q" name="q" type="text" inputmode="url" autocomplete="off" spellcheck="false" maxlength="400" placeholder="example.com" data-i18n-placeholder="ph" />
+          <div class="search-actions">
+            <button class="btn btn-cream" type="button" id="clearBtn" data-i18n="btn.clear">清空</button>
+            <button class="btn btn-primary" type="submit" id="searchBtn" data-i18n="btn.search">查询</button>
           </div>
-
-          <!-- Error state -->
-          <p class="error" x-show="error && !loading" x-text="error" role="alert"></p>
-
-          <!-- Results -->
-          <template x-if="result && !loading">
-            <div>
-              <div class="results-head">
-                <h3>Results</h3>
-                <button class="small" type="button" @click="toggleFormat"
-                        :aria-pressed="!showFormatted"
-                        x-text="showFormatted ? 'Show Raw' : 'Show Formatted'"></button>
-              </div>
-
-              <div x-show="showFormatted">
-                <template x-for="sec in formattedResult" :key="sec.lbl">
-                  <div class="result-section">
-                    <h4 x-text="sec.lbl"></h4>
-                    <ul class="row">
-                      <template x-for="item in sec.val" :key="item.lbl + item.val">
-                        <li>
-                          <span class="row-lbl" x-text="item.lbl"></span>
-                          <span class="row-val" x-text="item.val"></span>
-                        </li>
-                      </template>
-                    </ul>
-                  </div>
-                </template>
-              </div>
-
-              <pre x-show="!showFormatted" x-text="result"></pre>
-            </div>
-          </template>
+        </form>
+        <p class="status" id="status" role="status" data-i18n="status.idle">输入域名，或点下面任一示例。</p>
+        <div class="chips" id="chips">
+          <span class="chips-label" data-i18n="chips.label">试试</span>
+          <button type="button" class="chip" data-domain="example.com">example.com <i data-i18n="chip.demo">示例</i></button>
+          <button type="button" class="chip" data-domain="google.com">google.com <i data-i18n="chip.google">搜索</i></button>
+          <button type="button" class="chip" data-domain="github.com">github.com <i data-i18n="chip.github">代码</i></button>
+          <button type="button" class="chip" data-domain="wikipedia.org">wikipedia.org <i data-i18n="chip.wiki">百科</i></button>
+          <button type="button" class="chip" data-domain="cloudflare.com">cloudflare.com <i data-i18n="chip.cf">DNS</i></button>
+        </div>
+        <div class="hist" id="histRow" hidden>
+          <span class="chips-label" data-i18n="recent">最近</span>
+          <div class="chips" id="hist"></div>
+          <button type="button" class="mini" id="clearRecent" data-i18n="recent.clear">清除</button>
         </div>
       </section>
 
-      <!-- API Docs -->
-      <section class="api">
-        <h2>Public API</h2>
-        <p>Our public API is free to use without needing any authentication or CORS headers.</p>
-        <code>curl https://who-dat.as93.net/example.com</code>
-        <p><a href="/docs">View API Documentation</a></p>
+      <aside class="card card-snap" id="snap">
+        <div class="card-head">
+          <h2 class="h2">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 3.5 h7 l4 4 V20 a1.5 1.5 0 0 1 -1.5 1.5 h-9.5 a1.5 1.5 0 0 1 -1.5 -1.5 V5 a1.5 1.5 0 0 1 1.5 -1.5 z"></path>
+              <path d="M14 3.5 V8 h4.5"></path>
+              <path d="M8 12.5 h8 M8 16 h5.5"></path>
+            </svg>
+            <span data-i18n="snap.title">域名速览</span>
+          </h2>
+          <span class="badge badge-grey" id="snapBadge" data-i18n="snap.badge.wait">等待查询</span>
+        </div>
+        <div id="snapBody"></div>
+        <button type="button" class="btn btn-sum" id="snapCopy" data-i18n="snap.copy" disabled>复制速览</button>
+        <p class="fine" data-i18n="snap.fine">字段来自本站 /v1/whois 的归一化结果。联系人常被注册局隐去，隐去时会标明，不用空值冒充「查无此人」。</p>
+      </aside>
+
+      <section class="card card-record" id="record">
+        <div class="card-head">
+          <h2 class="h2">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="10" r="3"></circle>
+              <path d="M12 21 s-6.5 -6.2 -6.5 -11 a6.5 6.5 0 0 1 13 0 c0 4.8 -6.5 11 -6.5 11 z"></path>
+            </svg>
+            <span data-i18n="record.title">注册档案</span>
+          </h2>
+          <div class="card-tools">
+            <button type="button" class="mini" id="recordCopy" data-i18n="record.copy" disabled>复制</button>
+            <button type="button" class="mini" id="jsonToggle" data-i18n="record.json" aria-pressed="false">JSON</button>
+          </div>
+        </div>
+        <div id="recordBody"></div>
+        <pre class="raw" id="rawJson" hidden></pre>
       </section>
 
-      <!-- Self-Hosting -->
-      <section class="host">
-        <h2>Self-Hosting</h2>
-        <p>
-          Self-hosting Who Dat is easy! Either pull the Docker image, use the 1-click Vercel
-          deploy, or download or build the binary yourself.
-        </p>
-        <code>docker run -p 8080:8080 lissy93/who-dat</code>
-        <p>Or</p>
-        <a class="deploy" href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLissy93%2Fwho-dat"
-           target="_blank" rel="noopener noreferrer">
-          <button class="small" type="button">1-Click Deploy to Vercel</button>
-        </a>
-        <p>
-          <a href="https://github.com/Lissy93/who-dat#deployment" target="_blank" rel="noopener noreferrer">View Self-Hosting Documentation</a>
-        </p>
+      <section class="card card-ns" id="ns">
+        <div class="card-head">
+          <h2 class="h2">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3.5" y="4" width="17" height="6" rx="2"></rect>
+              <rect x="3.5" y="14" width="17" height="6" rx="2"></rect>
+              <path d="M7 7 h.01 M7 17 h.01"></path>
+            </svg>
+            <span data-i18n="ns.title">名称服务器</span>
+          </h2>
+        </div>
+        <div id="nsBody"></div>
+      </section>
+
+      <section class="card card-contacts" id="contacts">
+        <div class="card-head">
+          <h2 class="h2">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="9" cy="9" r="3"></circle>
+              <path d="M3.8 18.5 c1.2 -2.6 3.2 -3.8 5.2 -3.8 s4 1.2 5.2 3.8"></path>
+              <circle cx="17" cy="9.5" r="2.2"></circle>
+              <path d="M16 14.8 c1.6 -.4 3.2 .2 4.2 1.8"></path>
+            </svg>
+            <span data-i18n="contacts.title">联系人</span>
+          </h2>
+        </div>
+        <div id="contactsBody"></div>
+      </section>
+
+      <section class="card card-batch" id="batch">
+        <div class="card-head">
+          <h2 class="h2">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 6 h12 M8 12 h12 M8 18 h12"></path>
+              <path d="M4 6 h.01 M4 12 h.01 M4 18 h.01"></path>
+            </svg>
+            <span data-i18n="batch.title">批量查询</span>
+          </h2>
+          <span class="count" id="batchCount">0 / 10</span>
+        </div>
+        <p class="fine" data-i18n="batch.help">一次粘贴多个域名（换行、逗号或空格分隔均可），最多 10 个。这是服务端 /multi 的默认上限，公开部署上还有按 IP 的速率限制。</p>
+        <textarea class="ta" id="batchInput" rows="5" spellcheck="false" data-i18n-placeholder="batch.ph" placeholder="example.com&#10;github.com&#10;wikipedia.org"></textarea>
+        <div class="row-btns">
+          <button type="button" class="btn btn-primary" id="batchRun" data-i18n="batch.run">解析并查询</button>
+          <button type="button" class="btn btn-cream" id="batchCsv" data-i18n="batch.csv" disabled>导出 CSV</button>
+          <button type="button" class="btn btn-ghost" id="batchClear" data-i18n="batch.clear">清空</button>
+        </div>
+        <p class="status" id="batchStatus" role="status"></p>
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th data-i18n="th.domain">域名</th>
+                <th data-i18n="th.status">状态</th>
+                <th data-i18n="th.registrar">注册商</th>
+                <th data-i18n="th.expires">到期</th>
+                <th data-i18n="th.source">来源</th>
+              </tr>
+            </thead>
+            <tbody id="batchRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card card-api" id="api">
+        <div class="card-head">
+          <h2 class="h2">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 7 l-3 5 l3 5"></path>
+              <path d="M19 7 l3 5 l-3 5"></path>
+              <path d="M14 5 l-4 14"></path>
+            </svg>
+            <span data-i18n="api.title">终端接口</span>
+          </h2>
+          <span class="badge badge-lime" data-i18n="api.badge">无需密钥</span>
+        </div>
+        <p class="lede lede-sm" data-i18n="api.lede">页面和接口在同一部署上。浏览器打开根路径看到这个界面；curl 打下面的路径拿到 JSON。不需要 API key，响应带 CORS。</p>
+        <div class="term">
+          <div class="term-bar">
+            <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot"></span>
+            <span class="term-title">bash — /v1/whois</span>
+          </div>
+          <pre class="term-body" id="curlOut"></pre>
+        </div>
+        <ul class="notes">
+          <li data-i18n="api.n1">单条查询走 /v1/whois/{domain}，裸路径 /{domain} 也行。加上 ?raw=true 返回上游 RDAP JSON 或 WHOIS 原文。</li>
+          <li data-i18n="api.n2">批量用 /multi?domains=a.com,b.com。默认最多 10 个，可用环境变量 MAX_DOMAINS 调整。</li>
+          <li data-i18n="api.n3">完整字段说明在 /docs。OpenAPI 规范在 /openapi.yaml。</li>
+        </ul>
+      </section>
+
+      <section class="card card-about" id="about">
+        <div class="card-head">
+          <h2 class="h2">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.2"></circle>
+              <path d="M12 11 v5"></path>
+              <path d="M12 8 h.01"></path>
+            </svg>
+            <span data-i18n="about.title">数据与限制</span>
+          </h2>
+        </div>
+        <ul class="notes">
+          <li data-i18n="about.n1">先问 RDAP。只有这个后缀没有 RDAP 服务器时，才退回端口 43 的 WHOIS。</li>
+          <li data-i18n="about.n2">两种来源收成同一套字段：是否注册、注册商、日期、状态码、名称服务器、DNSSEC、联系人。</li>
+          <li data-i18n="about.n3">速率看部署方式。放在 Vercel 上时，匿名访问默认大约每分钟 30 次。</li>
+          <li data-i18n="about.n4">这是注册信息，不是「这个站安不安全」的结论。页面不加载广告或统计脚本。</li>
+        </ul>
+      </section>
+
+      <section class="card card-faq" id="faq">
+        <div class="card-head">
+          <h2 class="h2">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.2"></circle>
+              <path d="M9.2 9.2 a2.8 2.8 0 1 1 3.6 2.7 c-.7.3 -1 .8 -1 1.6"></path>
+              <path d="M12 17 h.01"></path>
+            </svg>
+            <span data-i18n="faq.title">常见问题</span>
+          </h2>
+        </div>
+        <details class="qa">
+          <summary><span data-i18n="faq.q1">怎么查一个域名的注册信息？</span></summary>
+          <p data-i18n="faq.a1">在上方输入域名，例如 example.com，或点一个示例。也接受带 https:// 的地址，服务端会先剥掉协议和路径。页面请求本站的 /v1/whois/{domain}，把注册状态、注册商、日期、名称服务器和联系人摊开。</p>
+        </details>
+        <details class="qa">
+          <summary><span data-i18n="faq.q2">为什么联系人经常是空的？</span></summary>
+          <p data-i18n="faq.a2">多数注册局按隐私规则隐去个人联系信息，通用顶级域尤其常见。隐去时这一格会写「已隐去」。那是注册局的选择，不是查询失败。</p>
+        </details>
+        <details class="qa">
+          <summary><span data-i18n="faq.q3">可以在命令行里查吗？</span></summary>
+          <p data-i18n="faq.a3">可以，不需要密钥。请求 /v1/whois/example.com 得到归一化 JSON；加上 ?raw=true 则是上游原文。多个域名用 /multi?domains=a.com,b.com。浏览器访问根路径仍然是这个页面。</p>
+        </details>
+        <details class="qa">
+          <summary><span data-i18n="faq.q4">会记录我查过什么吗？</span></summary>
+          <p data-i18n="faq.a4">页面没有第三方统计。「最近」列表只存在你这台浏览器的本地存储里，可以在上面一键清除。服务端可以开内存缓存，用来少打注册局，缓存的是查询结果，不是一份用户档案。</p>
+        </details>
       </section>
     </main>
 
-    <footer>
-      Built with ❤️ by <a href="https://aliciasykes.com" target="_blank" rel="noopener noreferrer">Alicia Sykes</a>.
-      Licensed under <a href="https://github.com/lissy93/who-dat/blob/HEAD/LICENSE" target="_blank" rel="noopener noreferrer">MIT</a> © 2026.
-      Source available on <a href="https://github.com/lissy93/who-dat" target="_blank" rel="noopener noreferrer">GitHub</a>.
-    </footer>
-
+    <div class="foot-wrap">
+      <footer class="foot">
+        <div class="foot-l">
+          <span class="brand-mark sm" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#FFF9EC" stroke-width="2.4" stroke-linecap="round">
+              <circle cx="10.5" cy="10.5" r="6.2"></circle>
+              <path d="M15.2 15.2 L20 20"></path>
+            </svg>
+          </span>
+          <strong class="brand-txt">whois</strong>
+          <span class="foot-sep" aria-hidden="true">·</span>
+          <span data-i18n="foot.blurb">域名注册信息</span>
+          <span class="foot-sep" aria-hidden="true">·</span>
+          <span data-i18n="foot.privacy">无广告 · 无追踪</span>
+        </div>
+        <div class="foot-r">
+          <a class="foot-link" href="/docs" data-i18n="nav.docs">文档</a>
+          <span class="foot-sep" aria-hidden="true">·</span>
+          <a class="foot-link" href="https://github.com/niesgeek/who-dat" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <span class="foot-sep" aria-hidden="true">·</span>
+          <a class="foot-link" href="https://github.com/niesgeek/who-dat/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT</a>
+        </div>
+      </footer>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js"></script>
   </body>
 </html>

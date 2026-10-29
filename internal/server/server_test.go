@@ -317,6 +317,46 @@ func TestPreflightAllowsAuthHeaders(t *testing.T) {
 	}
 }
 
+func TestFrontendShell(t *testing.T) {
+	h := newTestServer(registered(), nil)
+	get := func(path string) *httptest.ResponseRecorder {
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
+		return rec
+	}
+
+	page := get("/")
+	if page.Code != http.StatusOK {
+		t.Fatalf("index status = %d", page.Code)
+	}
+	body := page.Body.String()
+	for _, want := range []string{"查一个域名", "/v1/whois/", "/styles.css", "/app.js", "favicon.svg"} {
+		if !strings.Contains(body, want) {
+			t.Errorf("index missing %q", want)
+		}
+	}
+	for _, ban := range []string{"no-track.as93.net", "who-dat.as93.net", "alpinejs", "aliciasykes.com"} {
+		if strings.Contains(body, ban) {
+			t.Errorf("index still contains %q", ban)
+		}
+	}
+
+	css := get("/styles.css")
+	if css.Code != http.StatusOK || !strings.Contains(css.Body.String(), "#f5efe1") {
+		t.Fatalf("styles.css status/body = %d / missing paper color", css.Code)
+	}
+	js := get("/app.js")
+	if js.Code != http.StatusOK || !strings.Contains(js.Body.String(), "/v1/whois/") || !strings.Contains(js.Body.String(), "/multi?domains=") {
+		t.Fatalf("app.js status = %d, missing API paths", js.Code)
+	}
+	if ico := get("/favicon.svg"); ico.Code != http.StatusOK || !strings.Contains(ico.Body.String(), "#6C4CF1") {
+		t.Fatalf("favicon status = %d", ico.Code)
+	}
+	if font := get("/fonts/space-grotesk-700.woff2"); font.Code != http.StatusOK || font.Body.Len() < 1000 {
+		t.Fatalf("font status/len = %d/%d", font.Code, font.Body.Len())
+	}
+}
+
 func TestHealth(t *testing.T) {
 	rec := httptest.NewRecorder()
 	newTestServer(nil, nil).ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/health", nil))

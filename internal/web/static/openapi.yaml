@@ -1,17 +1,17 @@
 openapi: 3.1.0
 info:
-  title: Who Dat?
+  title: Domain WHOIS
   description: >
-    Free and open source WHOIS & RDAP lookup API. Returns a single, consistent,
-    normalized shape for every TLD. RDAP is used where available, with a port-43
-    WHOIS fallback. Append `?raw=true` to any lookup to get the original upstream payload.
+    Normalized WHOIS and RDAP lookup. Returns one consistent shape for every TLD.
+    RDAP is used where available, with a port-43 WHOIS fallback. Append `?raw=true`
+    to any lookup to get the original upstream payload.
   version: 2.0.0
   license:
     name: MIT
-    url: https://github.com/lissy93/who-dat/blob/HEAD/LICENSE
+    url: https://github.com/niesgeek/who-dat/blob/HEAD/LICENSE
 servers:
-  - url: https://who-dat.as93.net
-    description: Public instance
+  - url: /
+    description: This deployment
 paths:
   /v1/whois/{domain}:
     get:
