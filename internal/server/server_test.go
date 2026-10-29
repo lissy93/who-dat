@@ -349,7 +349,7 @@ func TestFrontendShell(t *testing.T) {
 	if js.Code != http.StatusOK || !strings.Contains(js.Body.String(), "/v1/whois/") || !strings.Contains(js.Body.String(), "/multi?domains=") {
 		t.Fatalf("app.js status = %d, missing API paths", js.Code)
 	}
-	if ico := get("/favicon.svg"); ico.Code != http.StatusOK || !strings.Contains(ico.Body.String(), "#6C4CF1") {
+	if ico := get("/favicon.svg"); ico.Code != http.StatusOK || !strings.Contains(ico.Body.String(), "#2EC4A8") {
 		t.Fatalf("favicon status = %d", ico.Code)
 	}
 	if font := get("/fonts/space-grotesk-700.woff2"); font.Code != http.StatusOK || font.Body.Len() < 1000 {

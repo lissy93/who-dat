@@ -61,8 +61,8 @@
   --amber: #ffc94d;
   --coral: #ff6b4a;
   --cream: #fff9ec;
-  /* Snap panel. Hot pink from the page palette — not the violet used on ip.fs.kg. */
-  --snap: #ff7eae;
+  /* Snap panel. Warm teal between the sky and lime chips — not violet, not hot pink. */
+  --snap: #2ec4a8;
   --snap-muted: rgba(20, 18, 16, 0.72);
   --snap-line: rgba(20, 18, 16, 0.32);
   --bd: 3px;
@@ -149,7 +149,13 @@ svg { display: block; flex: none; }
   box-shadow: var(--sh-xs);
 }
 
-.brand-mark.sm { width: 26px; height: 26px; border-radius: 8px; box-shadow: none; }
+.brand-mark.sm {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  box-shadow: none;
+  align-self: center;
+}
 
 .brand-txt {
   font-family: var(--mono);
@@ -937,17 +943,39 @@ html[lang="en"] .kv-2 { grid-template-columns: 1fr; }
   gap: 14px;
   flex-wrap: wrap;
   font-size: 12.5px;
+  line-height: 1;
 }
-.foot-l, .foot-r { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
-.foot-r { margin-left: auto; color: var(--ink-45); font-family: var(--mono); font-size: 11.5px; }
+.foot-l,
+.foot-r {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  line-height: 1;
+}
+.foot-r { margin-left: auto; color: var(--ink-45); font-family: var(--mono); font-size: 12.5px; }
+.foot .brand-txt,
+.foot-sep,
+.foot-link { line-height: 1; }
 .foot-sep { color: var(--ink-18); }
 .foot-link {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
   color: var(--ink);
   font-family: var(--sans);
   font-weight: 700;
   font-size: 12.5px;
   text-decoration: none;
-  border-bottom: 2px solid var(--ink-18);
+  /* Underline lives in padding, then a negative margin pulls it out of
+     the flex alignment box so the glyphs stay centered with the left side. */
+  --foot-ul: var(--ink-18);
+  background-image: linear-gradient(var(--foot-ul), var(--foot-ul));
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  background-position: left bottom;
+  padding-bottom: 2px;
+  margin-bottom: -2px;
 }
 
 .toast {
@@ -988,7 +1016,7 @@ html[lang="en"] .kv-2 { grid-template-columns: 1fr; }
   .btn:hover:not(:disabled) { box-shadow: 6px 6px 0 var(--ink); }
   .btn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
   .mini:hover:not(:disabled) { background: var(--ink); color: var(--card); }
-  .foot-link:hover { color: var(--violet-deep); border-bottom-color: var(--violet); }
+  .foot-link:hover { color: var(--violet-deep); --foot-ul: var(--violet); }
 }
 
 @media (max-width: 980px) {
