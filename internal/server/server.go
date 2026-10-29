@@ -17,10 +17,14 @@ import (
 )
 
 type server struct {
-	cfg       *config.Config
-	svc       *lookup.Service
-	files     http.Handler
-	lookupAPI http.Handler // bare-domain lookup with API middleware applied
+	cfg          *config.Config
+	svc          *lookup.Service
+	files        http.Handler
+	lookupAPI    http.Handler // bare-domain lookup with API middleware applied
+	httpClient   *http.Client
+	turnstileURL string
+	resendURL    string
+	contactLimit *limiter // nil when contact rate limiting is off
 }
 
 // Build wires the HTTP client, RDAP and WHOIS sources, optional cache, and lookup service
@@ -48,8 +52,28 @@ func Build(cfg *config.Config) http.Handler {
 
 // New builds the application handler.
 func New(cfg *config.Config, svc *lookup.Service) http.Handler {
-	s := &server{cfg: cfg, svc: svc, files: http.FileServer(http.FS(web.FS()))}
+	return newServer(cfg, svc).routes()
+}
 
+// newServer wires dependencies. Tests can point turnstileURL and resendURL at a
+// local server before calling routes.
+func newServer(cfg *config.Config, svc *lookup.Service) *server {
+	s := &server{
+		cfg:          cfg,
+		svc:          svc,
+		files:        http.FileServer(http.FS(web.FS())),
+		httpClient:   &http.Client{Timeout: 15 * time.Second},
+		turnstileURL: "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+		resendURL:    "https://api.resend.com/emails",
+	}
+	if cfg.ContactRatePerMinute > 0 {
+		s.contactLimit = newLimiter(float64(cfg.ContactRatePerMinute)/60, cfg.ContactRateBurst)
+	}
+	return s
+}
+
+func (s *server) routes() http.Handler {
+	cfg := s.cfg
 	privileged := func(r *http.Request) bool { return cfg.ValidKey(tokenFrom(r)) }
 	api := func(h http.HandlerFunc) http.Handler {
 		return chain(h, rateLimit(cfg.RatePerMinute, cfg.RateBurst, privileged), auth(cfg))
@@ -63,6 +87,10 @@ func New(cfg *config.Config, svc *lookup.Service) http.Handler {
 	mux.HandleFunc("GET /ping", s.handleHealth)
 	mux.HandleFunc("GET /docs", s.handleDocs)
 	mux.HandleFunc("GET /openapi.yaml", s.handleOpenAPI)
+	mux.HandleFunc("GET /contact", s.handleContactPage)
+	mux.HandleFunc("GET /api/contact/config", s.handleContactConfig)
+	mux.HandleFunc("POST /api/contact", s.handleContact)
+	mux.HandleFunc("GET /api/contact", s.handleContactMethod)
 	mux.HandleFunc("/", s.handleRoot)
 
 	return chain(mux, recoverer, logger, securityHeaders, cors)

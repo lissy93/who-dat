@@ -25,7 +25,21 @@ type Config struct {
 	// CDNCacheControl is sent on successful lookups so a shared cache (Vercel's CDN)
 	// serves repeats without re-invoking the function. Empty disables it.
 	CDNCacheControl string
+
+	// Contact form (/contact). Keys stay empty when unset; the page still renders
+	// and POST /api/contact returns a JSON error pointing at the mailto fallback.
+	TurnstileSiteKey   string // public, exposed by GET /api/contact/config
+	TurnstileSecretKey string // server-side Turnstile siteverify
+	ResendAPIKey       string // Resend bearer token
+	ContactFrom        string // From header, e.g. `wi.fs.kg <onboarding@resend.dev>`
+	// ContactRatePerMinute is the per-IP budget for POST /api/contact. <= 0 disables it.
+	ContactRatePerMinute int
+	ContactRateBurst     int
 }
+
+// DefaultContactFrom is the Resend sandbox sender used when CONTACT_FROM is unset.
+// A verified domain can replace it in production.
+const DefaultContactFrom = "wi.fs.kg <onboarding@resend.dev>"
 
 // Load reads configuration from the environment.
 func Load() *Config {
@@ -35,16 +49,22 @@ func Load() *Config {
 		rpm, burst = 30, 10
 	}
 	return &Config{
-		Port:            env("PORT", "8080"),
-		AuthKey:         os.Getenv("AUTH_KEY"),
-		APIKeys:         splitKeys(os.Getenv("API_KEYS")),
-		CacheTTL:        time.Duration(intEnv("CACHE_TTL_SECONDS", 3600)) * time.Second,
-		EnableCache:     boolEnv("ENABLE_CACHE", true),
-		LookupTimeout:   time.Duration(intEnv("LOOKUP_TIMEOUT_SECONDS", 5)) * time.Second,
-		MaxDomains:      intEnv("MAX_DOMAINS", 10),
-		RatePerMinute:   intEnv("RATE_PER_MINUTE", rpm),
-		RateBurst:       intEnv("RATE_BURST", burst),
-		CDNCacheControl: cdnCacheControl(intEnv("CDN_CACHE_TTL_SECONDS", 3600), intEnv("CDN_CACHE_SWR_SECONDS", 86400)),
+		Port:                 env("PORT", "8080"),
+		AuthKey:              os.Getenv("AUTH_KEY"),
+		APIKeys:              splitKeys(os.Getenv("API_KEYS")),
+		CacheTTL:             time.Duration(intEnv("CACHE_TTL_SECONDS", 3600)) * time.Second,
+		EnableCache:          boolEnv("ENABLE_CACHE", true),
+		LookupTimeout:        time.Duration(intEnv("LOOKUP_TIMEOUT_SECONDS", 5)) * time.Second,
+		MaxDomains:           intEnv("MAX_DOMAINS", 10),
+		RatePerMinute:        intEnv("RATE_PER_MINUTE", rpm),
+		RateBurst:            intEnv("RATE_BURST", burst),
+		CDNCacheControl:      cdnCacheControl(intEnv("CDN_CACHE_TTL_SECONDS", 3600), intEnv("CDN_CACHE_SWR_SECONDS", 86400)),
+		TurnstileSiteKey:     os.Getenv("TURNSTILE_SITE_KEY"),
+		TurnstileSecretKey:   os.Getenv("TURNSTILE_SECRET_KEY"),
+		ResendAPIKey:         os.Getenv("RESEND_API_KEY"),
+		ContactFrom:          env("CONTACT_FROM", DefaultContactFrom),
+		ContactRatePerMinute: intEnv("CONTACT_RATE_PER_MINUTE", 5),
+		ContactRateBurst:     intEnv("CONTACT_RATE_BURST", 3),
 	}
 }
 

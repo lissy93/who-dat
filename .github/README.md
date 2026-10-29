@@ -219,6 +219,21 @@ Each upstream RDAP/WHOIS lookup has a 5 second timeout. Set `LOOKUP_TIMEOUT_SECO
 
 The `/multi` endpoint accepts up to 10 domains per request by default. Set `MAX_DOMAINS` to raise or lower this.
 
+### Contact form
+
+`/contact` posts to `POST /api/contact`, which checks Cloudflare Turnstile and sends the note through [Resend](https://resend.com) to `i@wi.fs.kg`. The page still renders when these are unset; the endpoint then returns a JSON error and the form points at the mailto fallback.
+
+Set these on Vercel (Project → Settings → Environment Variables). Do not commit the values.
+
+| Variable | Required to send | Purpose |
+| --- | --- | --- |
+| `TURNSTILE_SITE_KEY` | yes | Public Turnstile site key. Exposed to the page by `GET /api/contact/config`. |
+| `TURNSTILE_SECRET_KEY` | yes | Server-side Turnstile verification. Never sent to the browser. |
+| `RESEND_API_KEY` | yes | Resend API key used to deliver the message. |
+| `CONTACT_FROM` | no | From address. Defaults to `wi.fs.kg <onboarding@resend.dev>` (Resend's sandbox sender). Set a verified sender for production. |
+| `CONTACT_RATE_PER_MINUTE` | no | Per-IP budget for the contact form. Default `5`. `0` disables it. |
+| `CONTACT_RATE_BURST` | no | Burst allowance. Default `3`. |
+
 ---
 
 ## Development

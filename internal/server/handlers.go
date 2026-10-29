@@ -110,6 +110,13 @@ func (s *server) handleDocs(w http.ResponseWriter, r *http.Request) {
 	s.files.ServeHTTP(w, r)
 }
 
+// handleContactPage serves the contact form. Registered explicitly so the single
+// path segment is not treated as a bare-domain lookup.
+func (s *server) handleContactPage(w http.ResponseWriter, r *http.Request) {
+	r.URL.Path = "/contact.html"
+	s.files.ServeHTTP(w, r)
+}
+
 // handleOpenAPI serves the OpenAPI specification.
 func (s *server) handleOpenAPI(w http.ResponseWriter, r *http.Request) {
 	r.URL.Path = "/openapi.yaml"

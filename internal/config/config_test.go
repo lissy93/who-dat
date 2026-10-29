@@ -56,6 +56,39 @@ func TestCdnCacheControl(t *testing.T) {
 	}
 }
 
+func TestLoadContactDefaults(t *testing.T) {
+	t.Setenv("TURNSTILE_SITE_KEY", "")
+	t.Setenv("TURNSTILE_SECRET_KEY", "")
+	t.Setenv("RESEND_API_KEY", "")
+	t.Setenv("CONTACT_FROM", "")
+	t.Setenv("CONTACT_RATE_PER_MINUTE", "")
+	t.Setenv("CONTACT_RATE_BURST", "")
+
+	c := Load()
+	if c.TurnstileSiteKey != "" || c.TurnstileSecretKey != "" || c.ResendAPIKey != "" {
+		t.Fatal("unset contact secrets must stay empty")
+	}
+	if c.ContactFrom != DefaultContactFrom {
+		t.Errorf("ContactFrom = %q, want %q", c.ContactFrom, DefaultContactFrom)
+	}
+	if c.ContactRatePerMinute != 5 || c.ContactRateBurst != 3 {
+		t.Errorf("contact rate = %d/%d, want 5/3", c.ContactRatePerMinute, c.ContactRateBurst)
+	}
+
+	t.Setenv("TURNSTILE_SITE_KEY", "site_public")
+	t.Setenv("TURNSTILE_SECRET_KEY", "secret_value")
+	t.Setenv("RESEND_API_KEY", "re_test")
+	t.Setenv("CONTACT_FROM", "Wi <hi@wi.fs.kg>")
+	t.Setenv("CONTACT_RATE_PER_MINUTE", "0")
+	c = Load()
+	if c.TurnstileSiteKey != "site_public" || c.TurnstileSecretKey != "secret_value" || c.ResendAPIKey != "re_test" {
+		t.Fatal("contact env was not loaded")
+	}
+	if c.ContactFrom != "Wi <hi@wi.fs.kg>" || c.ContactRatePerMinute != 0 {
+		t.Errorf("override = from %q rate %d", c.ContactFrom, c.ContactRatePerMinute)
+	}
+}
+
 func TestLoadRateDefaults(t *testing.T) {
 	t.Run("on Vercel", func(t *testing.T) {
 		t.Setenv("VERCEL", "1")
