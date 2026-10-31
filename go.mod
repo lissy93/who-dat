@@ -7,7 +7,7 @@ toolchain go1.26.5
 require (
 	github.com/likexian/whois v1.15.7
 	github.com/likexian/whois-parser v1.24.21
-	golang.org/x/net v0.61.0
+	golang.org/x/net v0.62.0
 )
 
 require (
