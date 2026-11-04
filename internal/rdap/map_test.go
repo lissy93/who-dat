@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/lissy93/who-dat/internal/domain"
+	"github.com/lissy93/who-dat/internal/model"
 )
 
 var update = flag.Bool("update", false, "update golden files")
@@ -39,6 +40,41 @@ func TestParseEventDate(t *testing.T) {
 		if got != want {
 			t.Errorf("parseEventDate(%q) = %q, want %q", in, got, want)
 		}
+	}
+}
+
+func TestDisclosed(t *testing.T) {
+	cases := map[string]bool{
+		"REDACTED FOR PRIVACY":       false,
+		"Redacted | EU Data Subject": false,
+		"[REDACTED]":                 false,
+		"Unredacted Labs":            true,
+		"Jane Doe":                   true,
+	}
+	for in, want := range cases {
+		if got := disclosed(in) != nil; got != want {
+			t.Errorf("disclosed(%q) kept = %v, want %v", in, got, want)
+		}
+	}
+}
+
+// Gandi labels its RDAP server as "about"; the website is the other link.
+func TestRegistrarURLSkipsRDAPLinks(t *testing.T) {
+	r := model.New("gandi.net", "gandi.net", "net")
+	mapRegistrar(r, rdapEntity{Links: []rdapLink{
+		{Rel: "service", Href: "https://www.gandi.net/"},
+		{Rel: "about", Type: "application/rdap+json", Href: "https://rdap.gandi.net/"},
+	}})
+	if got := str(r.Registrar.URL); got != "https://www.gandi.net/" {
+		t.Errorf("registrar.url = %q, want the website", got)
+	}
+}
+
+func TestUpdatedIgnoresDatabaseTimestamp(t *testing.T) {
+	r := model.New("nic.ye", "nic.ye", "ye")
+	mapEvents(r, []rdapEvent{{Action: "last update of RDAP database", Date: "2026-11-03T18:27:51Z"}})
+	if r.Dates.Updated != nil {
+		t.Errorf("dates.updated = %v, want null", r.Dates.Updated)
 	}
 }
 
@@ -77,4 +113,11 @@ func TestMapDomainGolden(t *testing.T) {
 			}
 		})
 	}
+}
+
+func str(p *string) string {
+	if p == nil {
+		return ""
+	}
+	return *p
 }

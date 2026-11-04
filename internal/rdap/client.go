@@ -53,16 +53,20 @@ func (c *Client) Lookup(ctx context.Context, n domain.Name) (*model.Result, erro
 	}
 
 	base := strings.TrimRight(servers[0], "/")
-	r, err := c.get(ctx, n, base)
+	self := base + "/domain/" + n.ASCII
+	r, err := c.get(ctx, n, base, self)
 	if err != nil {
 		return nil, &srcerr.SourceError{Source: model.SourceRDAP, Server: base, Err: err}
+	}
+	if r.IsRegistered {
+		c.followReferral(ctx, n, r, self)
 	}
 	return r, nil
 }
 
-// get fetches and maps the domain object from the RDAP server at base.
-func (c *Client) get(ctx context.Context, n domain.Name, base string) (*model.Result, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base+"/domain/"+n.ASCII, nil)
+// get fetches and maps the domain object at url, recording server as its source.
+func (c *Client) get(ctx context.Context, n domain.Name, server, url string) (*model.Result, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", srcerr.ErrUpstream, err)
 	}
@@ -81,11 +85,11 @@ func (c *Client) get(ctx context.Context, n domain.Name, base string) (*model.Re
 
 	switch {
 	case resp.StatusCode == http.StatusOK:
-		return mapDomain(n, base, body)
+		return mapDomain(n, server, body)
 	case resp.StatusCode == http.StatusNotFound:
-		return notRegistered(n, base, body), nil
+		return notRegistered(n, server, body), nil
 	case resp.StatusCode == http.StatusTooManyRequests:
-		return nil, &srcerr.RateLimited{RetryAfter: retryAfter(resp), Err: fmt.Errorf("rdap %s", base)}
+		return nil, &srcerr.RateLimited{RetryAfter: retryAfter(resp), Err: fmt.Errorf("rdap %s", server)}
 	default:
 		return nil, fmt.Errorf("%w: rdap status %d", srcerr.ErrUpstream, resp.StatusCode)
 	}

@@ -108,6 +108,7 @@
   "meta": {
     "source": "rdap",
     "server": "https://rdap.example/",
+    "referral": null,
     "fetchedAt": "0001-01-01T00:00:00Z",
     "cached": false
   }

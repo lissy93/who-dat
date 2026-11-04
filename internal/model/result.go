@@ -107,6 +107,7 @@ type Address struct {
 type Meta struct {
 	Source    string    `json:"source"`
 	Server    *string   `json:"server"`
+	Referral  *string   `json:"referral"` // registrar RDAP URL merged in, if any
 	FetchedAt time.Time `json:"fetchedAt"`
 	Cached    bool      `json:"cached"`
 }

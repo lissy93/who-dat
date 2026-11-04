@@ -37,7 +37,7 @@
 ## About
 
 who-dat is a self-hostable domain lookup service that turns the mess of RDAP and WHOIS into one clean JSON API.
-It does the hard parts you can't do in a browser or get consistently elsewhere: discovering the right RDAP server per-TLD via IANA bootstrap, parsing nested jCard contact data, and normalizing every registry's output into one shape. It queries RDAP first, falls back to WHOIS, and returns a single consistent result.
+It does the hard parts you can't do in a browser or get consistently elsewhere: discovering the right RDAP server per-TLD via IANA bootstrap, parsing nested jCard contact data, and normalizing every registry's output into one shape. It queries RDAP first (following the registry's referral to the registrar's RDAP server when there is one), falls back to WHOIS, and returns a single consistent result.
 
 
 ## API Usage
@@ -59,7 +59,7 @@ If you're self-hosting (recommended) then replace this with your own base URL.
 
 - **URL**: `/v1/whois/[domain]` (the bare `/[domain]` shorthand also works)
 - **Method**: `GET`
-- **Query Params**: `?raw=true` returns the original RDAP JSON or WHOIS text instead of the normalized response
+- **Query Params**: `?raw=true` returns the original RDAP JSON or WHOIS text instead of the normalized response. If the registry referred us to the registrar's RDAP server, you get both documents as `{"registry": ..., "registrar": ...}`
 - **Success Response**:
   - **Code**: 200 (the lookup succeeded, whether or not the domain is registered)
   - **Content**: Normalized WHOIS/RDAP data as JSON; the `isRegistered` field indicates registration status.

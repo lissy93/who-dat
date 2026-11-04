@@ -109,6 +109,7 @@
   "meta": {
     "source": "whois",
     "server": null,
+    "referral": null,
     "fetchedAt": "0001-01-01T00:00:00Z",
     "cached": false
   }

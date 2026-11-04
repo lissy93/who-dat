@@ -92,7 +92,9 @@ components:
       name: raw
       in: query
       required: false
-      description: When true, returns the original RDAP JSON or WHOIS text.
+      description: >-
+        When true, returns the original RDAP JSON or WHOIS text. If a registrar referral
+        was followed (see `meta.referral`), RDAP comes back as `{"registry": ..., "registrar": ...}`.
       schema: { type: boolean }
   responses:
     Error:
@@ -166,6 +168,7 @@ components:
           properties:
             source: { type: string, enum: [rdap, whois] }
             server: { type: [string, "null"] }
+            referral: { type: [string, "null"], description: Registrar RDAP URL merged into this result, when the registry referred to one. }
             fetchedAt: { type: string, format: date-time }
             cached: { type: boolean }
     Contact:
