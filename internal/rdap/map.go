@@ -85,11 +85,31 @@ func (l rdapLink) isRDAP() bool {
 }
 
 type rdapNameserver struct {
-	LDHName     string `json:"ldhName"`
-	IPAddresses struct {
-		V4 []string `json:"v4"`
-		V6 []string `json:"v6"`
-	} `json:"ipAddresses"`
+	LDHName     string  `json:"ldhName"`
+	IPAddresses rdapIPs `json:"ipAddresses"`
+}
+
+type rdapIPs struct {
+	V4 []string `json:"v4"`
+	V6 []string `json:"v6"`
+}
+
+// NASK (.pl) wraps ipAddresses in an array; merge the objects inside.
+func (ip *rdapIPs) UnmarshalJSON(b []byte) error {
+	type plain rdapIPs
+	if len(b) == 0 || b[0] != '[' {
+		return json.Unmarshal(b, (*plain)(ip))
+	}
+	var list []plain
+	if err := json.Unmarshal(b, &list); err != nil {
+		return err
+	}
+	*ip = rdapIPs{}
+	for _, p := range list {
+		ip.V4 = append(ip.V4, p.V4...)
+		ip.V6 = append(ip.V6, p.V6...)
+	}
+	return nil
 }
 
 type rdapSecureDNS struct {

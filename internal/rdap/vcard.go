@@ -1,6 +1,7 @@
 package rdap
 
 import (
+	"cmp"
 	"encoding/json"
 	"strings"
 
@@ -15,6 +16,7 @@ type vcard struct {
 	email string
 	tel   string
 	adr   []string // structured address: pobox, ext, street, locality, region, code, country
+	cc    string   // ISO country code (RFC 8605); registrars often leave the name empty
 }
 
 // UnmarshalJSON parses a jCard array. It is deliberately lenient: malformed cards yield an
@@ -50,7 +52,11 @@ func (v *vcard) UnmarshalJSON(b []byte) error {
 				v.tel = jcardString(p[3])
 			}
 		case "adr":
-			v.adr = jcardStrings(p[3])
+			var params struct {
+				CC json.RawMessage `json:"cc"`
+			}
+			_ = json.Unmarshal(p[1], &params)
+			v.adr, v.cc = jcardStrings(p[3]), jcardString(params.CC)
 		}
 	}
 	return nil
@@ -77,7 +83,7 @@ func (v *vcard) address() model.Address {
 		City:       at(3),
 		State:      at(4),
 		PostalCode: at(5),
-		Country:    at(6),
+		Country:    cmp.Or(disclosed(v.cc), at(6)),
 	}
 }
 

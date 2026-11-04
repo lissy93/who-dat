@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -75,6 +77,22 @@ func TestUpdatedIgnoresDatabaseTimestamp(t *testing.T) {
 	mapEvents(r, []rdapEvent{{Action: "last update of RDAP database", Date: "2026-11-03T18:27:51Z"}})
 	if r.Dates.Updated != nil {
 		t.Errorf("dates.updated = %v, want null", r.Dates.Updated)
+	}
+}
+
+// RFC 9083 says ipAddresses is an object, but NASK (.pl) sends an array of them.
+func TestNameserverIPs(t *testing.T) {
+	n := domain.Name{ASCII: "x.pl", Unicode: "x.pl", TLD: "pl"}
+	want := []model.Nameserver{{Name: "ns1.x.pl", IPv4: []string{"192.0.2.1"}, IPv6: []string{"2001:db8::1"}}}
+	for _, ips := range []string{
+		`{"v4":["192.0.2.1"],"v6":["2001:db8::1"]}`,
+		`[{"v4":["192.0.2.1"],"v6":["2001:db8::1"]}]`,
+	} {
+		raw := fmt.Appendf(nil, `{"nameservers":[{"ldhName":"ns1.x.pl","ipAddresses":%s}]}`, ips)
+		r, err := mapDomain(n, "https://rdap.example/", raw)
+		if err != nil || !reflect.DeepEqual(r.Nameservers, want) {
+			t.Errorf("ipAddresses %s: got %+v, %v", ips, r, err)
+		}
 	}
 }
 
