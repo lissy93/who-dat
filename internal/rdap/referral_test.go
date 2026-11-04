@@ -52,6 +52,7 @@ func TestLookupMergesRegistrar(t *testing.T) {
 		{"dates.updated", stamp(r.Dates.Updated), "2024-08-02T02:17:33Z"},
 		{"registrar.whoisServer", str(r.Registrar.WhoisServer), "whois.markmonitor.com"},
 		{"registrant.state", str(r.Contacts.Registrant.Address.State), "CA"},
+		{"registrant.country", str(r.Contacts.Registrant.Address.Country), "US"},
 		{"registrant.name", str(r.Contacts.Registrant.Name), ""}, // was "REDACTED REGISTRANT"
 		{"meta.referral", str(r.Meta.Referral), registrarURL},
 	}
