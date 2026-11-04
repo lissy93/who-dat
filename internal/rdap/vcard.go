@@ -68,7 +68,7 @@ func (v *vcard) name() string {
 func (v *vcard) address() model.Address {
 	at := func(i int) *string {
 		if i < len(v.adr) {
-			return model.Str(v.adr[i])
+			return disclosed(v.adr[i])
 		}
 		return nil
 	}

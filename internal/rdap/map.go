@@ -3,8 +3,11 @@ package rdap
 import (
 	"encoding/json"
 	"fmt"
+	"mime"
+	"slices"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/lissy93/who-dat/internal/domain"
 	"github.com/lissy93/who-dat/internal/model"
@@ -72,6 +75,13 @@ func (s *laxString) UnmarshalJSON(b []byte) error {
 type rdapLink struct {
 	Rel  string `json:"rel"`
 	Href string `json:"href"`
+	Type string `json:"type"`
+}
+
+// isRDAP reports whether the link points at an RDAP document rather than a web page.
+func (l rdapLink) isRDAP() bool {
+	t, _, err := mime.ParseMediaType(l.Type)
+	return err == nil && t == contentType
 }
 
 type rdapNameserver struct {
@@ -146,10 +156,9 @@ func mapEvents(r *model.Result, events []rdapEvent) {
 		switch strings.ToLower(e.Action) {
 		case "registration":
 			r.Dates.Created = model.Time(t)
-		case "last changed", "last update of rdap database":
-			if r.Dates.Updated == nil || strings.ToLower(e.Action) == "last changed" {
-				r.Dates.Updated = model.Time(t)
-			}
+		// Not "last update of RDAP database": that is only when the record was served.
+		case "last changed":
+			r.Dates.Updated = model.Time(t)
 		case "expiration":
 			r.Dates.Expires = model.Time(t)
 		}
@@ -218,6 +227,9 @@ func mapRegistrar(r *model.Result, e rdapEntity) {
 		}
 	}
 	for _, l := range e.Links {
+		if l.isRDAP() {
+			continue // an RDAP endpoint, not the website
+		}
 		if strings.EqualFold(l.Rel, "about") || (r.Registrar.URL == nil && strings.HasPrefix(l.Href, "http")) {
 			r.Registrar.URL = model.Str(l.Href)
 		}
@@ -237,12 +249,21 @@ func mapRegistrar(r *model.Result, e rdapEntity) {
 
 func contactFromEntity(e rdapEntity) model.Contact {
 	c := model.Contact{
-		Name:         model.Str(e.VCard.fn),
-		Organization: model.Str(e.VCard.org),
-		Email:        model.Str(e.VCard.email),
-		Phone:        model.Str(e.VCard.tel),
+		Name:         disclosed(e.VCard.fn),
+		Organization: disclosed(e.VCard.org),
+		Email:        disclosed(e.VCard.email),
+		Phone:        disclosed(e.VCard.tel),
 		Address:      e.VCard.address(),
 	}
 	c.Redacted = c.Name == nil && c.Organization == nil && c.Email == nil && c.Phone == nil
 	return c
+}
+
+// disclosed is model.Str, minus placeholders like "REDACTED FOR PRIVACY".
+func disclosed(s string) *string {
+	words := strings.FieldsFunc(strings.ToUpper(s), func(r rune) bool { return !unicode.IsLetter(r) })
+	if slices.Contains(words, "REDACTED") {
+		return nil
+	}
+	return model.Str(s)
 }
