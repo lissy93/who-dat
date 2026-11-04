@@ -100,8 +100,18 @@ func merge(r, rr *model.Result) {
 
 // takeContact uses the registrar's contact, unless the registry's discloses more.
 func takeContact(dst *model.Contact, registrar model.Contact) {
-	if registrar == (model.Contact{Redacted: true}) || registrar.Redacted && !dst.Redacted {
+	if registrar.Redacted && (!dst.Redacted || addressParts(registrar.Address) < addressParts(dst.Address)) {
 		return
 	}
 	*dst = registrar
+}
+
+func addressParts(a model.Address) int {
+	n := 0
+	for _, p := range []*string{a.Street, a.City, a.State, a.PostalCode, a.Country} {
+		if p != nil {
+			n++
+		}
+	}
+	return n
 }

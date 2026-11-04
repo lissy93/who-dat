@@ -53,10 +53,10 @@ func (v *vcard) UnmarshalJSON(b []byte) error {
 			}
 		case "adr":
 			var params struct {
-				CC string `json:"cc"`
+				CC json.RawMessage `json:"cc"`
 			}
 			_ = json.Unmarshal(p[1], &params)
-			v.adr, v.cc = jcardStrings(p[3]), params.CC
+			v.adr, v.cc = jcardStrings(p[3]), jcardString(params.CC)
 		}
 	}
 	return nil

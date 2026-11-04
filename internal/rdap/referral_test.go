@@ -90,6 +90,7 @@ func TestLookupIgnoresBadReferral(t *testing.T) {
 func TestTakeContact(t *testing.T) {
 	nothing := model.Contact{Redacted: true}
 	stateOnly := model.Contact{Redacted: true, Address: model.Address{State: model.Str("CA")}}
+	stateAndCountry := model.Contact{Redacted: true, Address: model.Address{State: model.Str("CA"), Country: model.Str("US")}}
 	registryCo := model.Contact{Organization: model.Str("Registry Co")}
 	registrarCo := model.Contact{Organization: model.Str("Registrar Co")}
 
@@ -100,6 +101,7 @@ func TestTakeContact(t *testing.T) {
 		{"registrar sent nothing", registryCo, nothing, registryCo},
 		{"registrar redacts more", registryCo, stateOnly, registryCo},
 		{"registrar adds a little", nothing, stateOnly, stateOnly},
+		{"registrar has less address", stateAndCountry, stateOnly, stateAndCountry},
 		{"both disclose", registryCo, registrarCo, registrarCo},
 	}
 	for _, tt := range tests {
