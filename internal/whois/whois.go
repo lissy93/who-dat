@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	gowhois "github.com/likexian/whois"
@@ -45,7 +46,7 @@ func (c *Client) query(ctx context.Context, n domain.Name) (*model.Result, error
 		if dl, ok := ctx.Deadline(); ok {
 			wc.SetTimeout(time.Until(dl))
 		}
-		raw, err := wc.Whois(n.ASCII)
+		raw, err := wc.Whois(queryFor(n))
 		ch <- result{raw: raw, err: err}
 	}()
 
@@ -68,4 +69,12 @@ func (c *Client) query(ctx context.Context, n domain.Name) (*model.Result, error
 		}
 		return mapWhois(n, res.raw)
 	}
+}
+
+// queryFor adds /e for .jp, so JPRS skips the Japanese text the parser can't read.
+func queryFor(n domain.Name) string {
+	if strings.HasSuffix(n.ASCII, ".jp") {
+		return n.ASCII + "/e"
+	}
+	return n.ASCII
 }
