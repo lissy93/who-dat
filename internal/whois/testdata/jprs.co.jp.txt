@@ -1,0 +1,25 @@
+[ JPRS database provides information on network administration. Its use is    ]
+[ restricted to network administration purposes. For further information,     ]
+[ use 'whois -h whois.jprs.jp help'. To suppress Japanese output, add'/e'     ]
+[ at the end of command, e.g. 'whois -h whois.jprs.jp xxx/e'.                 ]
+Domain Information:
+a. [Domain Name]                JPRS.CO.JP
+g. [Organization]               Japan Registry Services Co.,Ltd.
+l. [Organization Type]          Company
+m. [Administrative Contact]     SO42861JP
+n. [Technical Contact]          KI59866JP
+p. [Name Server]                ns1.jprs.co.jp
+p. [Name Server]                ns2.jprs.co.jp
+p. [Name Server]                ns3.jprs.co.jp
+p. [Name Server]                ns4.jprs.co.jp
+s. [Signing Key]                63574 8 2 (
+                                5D5518EC26E3D8EED9411BA2373A0B9D
+                                B7014A54CF5440BC0AA0468AF943973B )
+[State]                         Connected (2027/01/31)
+[Lock Status]                   AgentChangeLocked
+[Registered Date]               2001/01/22
+[Connected Date]                2001/01/24
+[Last Update]                   2026/02/01 01:02:04 (JST)
+
+% Query time: 732 msec
+% WHEN: Sat Nov 14 07:33:17 GMT 2026
