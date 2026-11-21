@@ -21,6 +21,7 @@ jobs:
       pull-requests: read
     outputs:
       go: ${{ steps.filter.outputs.go }}
+      deps: ${{ steps.filter.outputs.deps }}
       docker: ${{ steps.filter.outputs.docker }}
       workflows: ${{ steps.filter.outputs.workflows }}
     steps:
@@ -33,6 +34,9 @@ jobs:
           filters: |
             go:
               - '**/*.go'
+              - 'go.mod'
+              - 'go.sum'
+            deps:
               - 'go.mod'
               - 'go.sum'
             docker:
@@ -152,23 +156,19 @@ jobs:
           git diff --exit-code -- go.mod go.sum \
             || { echo "::error::go.mod/go.sum are not tidy — run 'go mod tidy'"; exit 1; }
 
-  # Scan dependencies for known vulnerabilities.
-  vulncheck:
-    name: 🛡️ Vulnerabilities
+  # Flag vulnerable deps this PR adds or changes (full scan: vulncheck.yml).
+  dependency-review:
+    name: 🛡️ Dependency Review
     needs: changes
-    if: needs.changes.outputs.go == 'true'
+    if: needs.changes.outputs.deps == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-      - name: Set up Go
-        uses: actions/setup-go@v7
+      - name: Review dependencies
+        uses: actions/dependency-review-action@v5
         with:
-          go-version-file: go.mod
-      - name: Run govulncheck
-        run: |
-          go install golang.org/x/vuln/cmd/govulncheck@latest
-          govulncheck ./...
+          fail-on-severity: moderate
 
   # Build the Docker image and smoke-test the health endpoint.
   docker:
