@@ -32,8 +32,8 @@ func (c *Client) Lookup(ctx context.Context, n domain.Name) (*model.Result, erro
 	return r, nil
 }
 
-// query runs the blocking WHOIS lookup. The lib picks the server itself (unless it's in
-// serverOverrides), so we never learn which host we actually asked.
+// query runs the blocking WHOIS lookup. The lib picks the server itself unless
+// serverOverrides has one, and it doesn't report which host it asked.
 func (c *Client) query(ctx context.Context, n domain.Name) (*model.Result, error) {
 	type result struct {
 		raw string
