@@ -1,0 +1,19 @@
+Available
+
+
+
+No information was found matching that query.
+
+>>> Last update of WHOIS database: 2026-11-26T07:10:16Z <<<
+
+# --
+
+# For more information on Whois status codes, please visit https://icann.org/epp
+
+# ZARC Complaint/s Procedure and Form: https://zarc.web.za/wp-content/uploads/2025/08/ZA-SLD_Takedown_Policy.docx.pdf
+# The use of this Whois facility is subject to the following terms and
+# conditions. https://zarc.web.za/whois-terms-and-conditions
+# Copyright (c) ZARC 1995-2026
+
+% Query time: 1034 msec
+% WHEN: Thu Nov 26 07:10:15 GMT 2026

@@ -1,0 +1,93 @@
+{
+  "query": "unregistered.co.za",
+  "domain": "unregistered.co.za",
+  "domainUnicode": null,
+  "id": null,
+  "tld": "co.za",
+  "isRegistered": false,
+  "registrar": {
+    "name": null,
+    "ianaId": null,
+    "url": null,
+    "whoisServer": null,
+    "abuseEmail": null,
+    "abusePhone": null,
+    "reseller": null
+  },
+  "status": [],
+  "nameservers": [],
+  "dnssec": {
+    "signed": false,
+    "dsData": []
+  },
+  "dates": {
+    "created": null,
+    "updated": null,
+    "expires": null
+  },
+  "contacts": {
+    "registrant": {
+      "name": null,
+      "organization": null,
+      "email": null,
+      "phone": null,
+      "address": {
+        "street": null,
+        "city": null,
+        "state": null,
+        "postalCode": null,
+        "country": null
+      },
+      "redacted": true
+    },
+    "admin": {
+      "name": null,
+      "organization": null,
+      "email": null,
+      "phone": null,
+      "address": {
+        "street": null,
+        "city": null,
+        "state": null,
+        "postalCode": null,
+        "country": null
+      },
+      "redacted": true
+    },
+    "tech": {
+      "name": null,
+      "organization": null,
+      "email": null,
+      "phone": null,
+      "address": {
+        "street": null,
+        "city": null,
+        "state": null,
+        "postalCode": null,
+        "country": null
+      },
+      "redacted": true
+    },
+    "billing": {
+      "name": null,
+      "organization": null,
+      "email": null,
+      "phone": null,
+      "address": {
+        "street": null,
+        "city": null,
+        "state": null,
+        "postalCode": null,
+        "country": null
+      },
+      "redacted": true
+    }
+  },
+  "meta": {
+    "source": "whois",
+    "server": null,
+    "referral": null,
+    "fetchedAt": "0001-01-01T00:00:00Z",
+    "cached": false
+  }
+}

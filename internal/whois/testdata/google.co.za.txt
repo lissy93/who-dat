@@ -1,0 +1,84 @@
+Domain Name: google.co.za
+Registry Domain ID: 1szmf_DOMAIN-CO.ZA
+Registrar WHOIS Server: Whois.markmonitor.com
+Registrar URL: https://www.markmonitor.com/
+Updated Date: 2026-05-24T10:24:57Z
+Creation Date: 2001-06-25T20:37:59Z
+Registry Expiry Date: 2027-06-25T20:37:59Z
+Registrar Registration Expiration Date: 2027-06-25T20:37:59Z
+Registrar: MarkMonitor
+Registrar IANA ID: 292
+Registrar Abuse Contact Email: ccops@markmonitor.com
+Registrar Abuse Contact Phone: +1.2083895740
+Reseller: 
+Domain Status: serverDeleteProhibited https://icann.org/epp#serverDeleteProhibited
+Domain Status: serverTransferProhibited https://icann.org/epp#serverTransferProhibited
+Domain Status: serverUpdateProhibited https://icann.org/epp#serverUpdateProhibited
+Registrant Organization: 
+Registrant Country: US
+Registrant Email: Please contact the RDDS service of the listed Registrar for Registrant, Admin, or Tech contact information.
+Admin Email: Please contact the RDDS service of the listed Registrar for Registrant, Admin, or Tech contact information.
+Tech Email: Please contact the RDDS service of the listed Registrar for Registrant, Admin, or Tech contact information.
+Billing Email: Please contact the RDDS service of the listed Registrar for Registrant, Admin, or Tech contact information.
+Name Server: ns1.google.com
+Name Server: ns2.google.com
+Name Server: ns3.google.com
+Name Server: ns4.google.com
+DNSSEC: unsigned
+
+URL of the ICANN Whois Inaccuracy Complaint Form: https://www.icann.org/wicf/
+>>> Last update of WHOIS database: 2026-11-26T07:03:48Z <<<
+
+For more information on Whois status codes, please visit https://icann.org/epp
+
+# --
+
+# For more information on Whois status codes, please visit https://icann.org/epp
+
+# ZARC Complaint/s Procedure and Form: https://zarc.web.za/wp-content/uploads/2025/08/ZA-SLD_Takedown_Policy.docx.pdf
+# The use of this Whois facility is subject to the following terms and
+# conditions. https://zarc.web.za/whois-terms-and-conditions
+# Copyright (c) ZARC 1995-2026
+
+Domain Name: google.co.za
+Registry Domain ID: DOM_1SZMF-COZA
+Registrar WHOIS Server: whois.markmonitor.com
+Registrar Registration Expiration Date: 2027-06-25T22:00:00.000+00:00
+Registry Expiry Date: 2027-06-25T00:00:00.000+00:00
+Creation Date: 2001-06-25T20:37:59.000+00:00
+Updated Date: 2026-05-24T10:24:57.000+00:00
+Registrant Contact URL: https://domains.markmonitor.com/whois/contact/google.co.za
+Registrant Name: 
+Registrant Street: 
+Registrant City: 
+Registrant State/Province: CA
+Registrant Postal Code: 
+Registrant Country: US
+Tech Contact URL: https://domains.markmonitor.com/whois/contact/google.co.za
+Tech Name: 
+Registrar Organization: Markmonitor Inc.
+Registrar Street: 3540 E Longwing Ln
+Registrar City: Meridian
+Registrar State/Province: ID
+Registrar Postal Code: 83646
+Registrar Country: US
+Registrar Contact URL: https://www.markmonitor.com/contact-us/
+Registrar: Markmonitor Inc.
+Registrar IANA ID: 292
+Registrar Abuse Contact: https://corp.markmonitor.com/domain/ui/abuse-report
+Registrar Abuse Contact Phone: +1.2086851750
+Registrar Abuse Contact Name: Markmonitor Inc.
+Domain Status: clientUpdateProhibited
+Domain Status: clientTransferProhibited
+Domain Status: clientDeleteProhibited
+Name Server: ns1.google.com
+Name Server: ns2.google.com
+Name Server: ns3.google.com
+Name Server: ns4.google.com
+Name Server Status: active
+Name Server Last Changed: 2012-08-20T17:02:33.000+00:00 (most recent)
+DNSSEC: unsigned
+URL of the ICANN WHOIS Data Problem Reporting System: http://wdprs.internic.net/
+
+% Query time: 1677 msec
+% WHEN: Thu Nov 26 07:03:47 GMT 2026

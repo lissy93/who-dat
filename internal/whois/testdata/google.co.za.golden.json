@@ -1,0 +1,121 @@
+{
+  "query": "google.co.za",
+  "domain": "google.co.za",
+  "domainUnicode": null,
+  "id": "DOM_1SZMF-COZA",
+  "tld": "co.za",
+  "isRegistered": true,
+  "registrar": {
+    "name": "MarkMonitor",
+    "ianaId": null,
+    "url": "https://www.markmonitor.com/",
+    "whoisServer": "Whois.markmonitor.com",
+    "abuseEmail": "ccops@markmonitor.com",
+    "abusePhone": "+1.2086851750",
+    "reseller": null
+  },
+  "status": [
+    "serverDeleteProhibited",
+    "serverTransferProhibited",
+    "serverUpdateProhibited",
+    "clientUpdateProhibited",
+    "clientTransferProhibited",
+    "clientDeleteProhibited"
+  ],
+  "nameservers": [
+    {
+      "name": "ns1.google.com",
+      "ipv4": [],
+      "ipv6": []
+    },
+    {
+      "name": "ns2.google.com",
+      "ipv4": [],
+      "ipv6": []
+    },
+    {
+      "name": "ns3.google.com",
+      "ipv4": [],
+      "ipv6": []
+    },
+    {
+      "name": "ns4.google.com",
+      "ipv4": [],
+      "ipv6": []
+    }
+  ],
+  "dnssec": {
+    "signed": false,
+    "dsData": []
+  },
+  "dates": {
+    "created": "2001-06-25T20:37:59Z",
+    "updated": "2026-05-24T10:24:57Z",
+    "expires": "2027-06-25T20:37:59Z"
+  },
+  "contacts": {
+    "registrant": {
+      "name": null,
+      "organization": null,
+      "email": "please contact the rdds service of the listed registrar for registrant, admin, or tech contact information.",
+      "phone": null,
+      "address": {
+        "street": null,
+        "city": null,
+        "state": "CA",
+        "postalCode": null,
+        "country": "US"
+      },
+      "redacted": false
+    },
+    "admin": {
+      "name": null,
+      "organization": null,
+      "email": "please contact the rdds service of the listed registrar for registrant, admin, or tech contact information.",
+      "phone": null,
+      "address": {
+        "street": null,
+        "city": null,
+        "state": null,
+        "postalCode": null,
+        "country": null
+      },
+      "redacted": false
+    },
+    "tech": {
+      "name": null,
+      "organization": null,
+      "email": "please contact the rdds service of the listed registrar for registrant, admin, or tech contact information.",
+      "phone": null,
+      "address": {
+        "street": null,
+        "city": null,
+        "state": null,
+        "postalCode": null,
+        "country": null
+      },
+      "redacted": false
+    },
+    "billing": {
+      "name": null,
+      "organization": null,
+      "email": "please contact the rdds service of the listed registrar for registrant, admin, or tech contact information.",
+      "phone": null,
+      "address": {
+        "street": null,
+        "city": null,
+        "state": null,
+        "postalCode": null,
+        "country": null
+      },
+      "redacted": false
+    }
+  },
+  "meta": {
+    "source": "whois",
+    "server": null,
+    "referral": null,
+    "fetchedAt": "0001-01-01T00:00:00Z",
+    "cached": false
+  }
+}
