@@ -3,6 +3,8 @@ package whois
 import (
 	"errors"
 	"fmt"
+	"slices"
+	"strings"
 	"time"
 
 	whoisparser "github.com/likexian/whois-parser"
@@ -34,6 +36,10 @@ func mapWhois(n domain.Name, raw string) (*model.Result, error) {
 			errors.Is(err, whoisparser.ErrBlockedDomain):
 			r.IsRegistered = false
 			return r, nil
+		case errors.Is(err, whoisparser.ErrDomainDataInvalid) &&
+			slices.ContainsFunc(notFoundPhrases, func(p string) bool { return strings.Contains(raw, p) }):
+			r.IsRegistered = false
+			return r, nil
 		case errors.Is(err, whoisparser.ErrDomainLimitExceed):
 			return nil, &srcerr.RateLimited{Err: err}
 		default:
@@ -49,6 +55,11 @@ func mapWhois(n domain.Name, raw string) (*model.Result, error) {
 	r.Contacts.Tech = contact(info.Technical)
 	r.Contacts.Billing = contact(info.Billing)
 	return r, nil
+}
+
+// notFoundPhrases are "not registered" replies the parser doesn't know about.
+var notFoundPhrases = []string{
+	"No information was found matching that query.", // ZARC (.co.za, .net.za, .org.za, .web.za)
 }
 
 func mapDomain(r *model.Result, d *whoisparser.Domain) {

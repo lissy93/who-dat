@@ -32,8 +32,8 @@ func (c *Client) Lookup(ctx context.Context, n domain.Name) (*model.Result, erro
 	return r, nil
 }
 
-// query runs the blocking WHOIS lookup. The lib picks the server itself, so we never
-// learn which host we actually asked.
+// query runs the blocking WHOIS lookup. The lib picks the server itself (unless it's in
+// serverOverrides), so we never learn which host we actually asked.
 func (c *Client) query(ctx context.Context, n domain.Name) (*model.Result, error) {
 	type result struct {
 		raw string
@@ -46,7 +46,7 @@ func (c *Client) query(ctx context.Context, n domain.Name) (*model.Result, error
 		if dl, ok := ctx.Deadline(); ok {
 			wc.SetTimeout(time.Until(dl))
 		}
-		raw, err := wc.Whois(queryFor(n))
+		raw, err := wc.Whois(queryFor(n), serverOverrides[n.TLD])
 		ch <- result{raw: raw, err: err}
 	}()
 
@@ -69,6 +69,16 @@ func (c *Client) query(ctx context.Context, n domain.Name) (*model.Result, error
 		}
 		return mapWhois(n, res.raw)
 	}
+}
+
+// serverOverrides has WHOIS hosts for suffixes the lib can't find through IANA.
+// Unlisted suffixes give "", which leaves the choice to the lib.
+var serverOverrides = map[string]string{
+	// IANA has no WHOIS server for .za. ZARC runs one per second-level domain.
+	"co.za":  "coza-whois.registry.net.za",
+	"net.za": "net-whois.registry.net.za",
+	"org.za": "org-whois.registry.net.za",
+	"web.za": "web-whois.registry.net.za",
 }
 
 // queryFor adds /e for .jp, so JPRS skips the Japanese text the parser can't read.
